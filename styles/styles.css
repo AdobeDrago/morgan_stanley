@@ -42,12 +42,6 @@
   --body-font-family: var(--ms-brand-font), roboto-fallback, sans-serif;
   --heading-font-family: var(--ms-brand-heading-font), roboto-condensed-fallback, sans-serif;
 
-  /* Brand-font aliases: point these at "ms-sans" once the font is provisioned.
-   * Today they resolve to roboto (documented parity gap). Use these in brand
-   * components (header/blocks) so a single swap flips the whole site to ms-sans. */
-  --ms-brand-font: var(--body-font-family);
-  --ms-brand-heading-font: var(--heading-font-family);
-
   /* body sizes */
   --body-font-size-m: 22px;
   --body-font-size-s: 19px;
