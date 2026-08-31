@@ -1,27 +1,126 @@
+/*
+ * cards-insights — Featured Insights cards
+ * Values measured from Morgan Stanley IM production (individual-investor,
+ * "Featured Insights" section) at 1280px.
+ * Decorated DOM: .cards-insights > ul > li >
+ *   .cards-insights-card-image (picture) + .cards-insights-card-body
+ *     (p=eyebrow tag, h3=title, p=description, p=date, p>a=link -> doc icon)
+ */
+
 .cards-insights > ul {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
+  grid-template-columns: 1fr;
   gap: 24px;
 }
 
 .cards-insights > ul > li {
-  border: 1px solid #dadada;
-  background-color: var(--background-color);
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
 }
 
-.cards-insights .cards-insights-card-body {
-  margin: 16px;
-}
-
+/* image sits flush at top; text box below carries the card border */
 .cards-insights .cards-insights-card-image {
   line-height: 0;
 }
 
-.cards-insights > ul > li img {
+.cards-insights .cards-insights-card-image img {
+  display: block;
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 2 / 1;
   object-fit: cover;
+}
+
+/* text body: bordered box, fills remaining height so date/icon anchor at bottom */
+.cards-insights .cards-insights-card-body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  margin: 0;
+  padding: 24px 16px;
+  border: 1px solid #ddd;
+  color: #333;
+  font-family: var(--body-font-family);
+}
+
+/* category eyebrow tag (first paragraph) */
+.cards-insights .cards-insights-card-body > p:first-child {
+  margin: 0 0 24px;
+  font-size: 16px;
+  line-height: 20px;
+  color: #333;
+  text-transform: uppercase;
+}
+
+/* title */
+.cards-insights .cards-insights-card-body > h3 {
+  margin: 0;
+  font-family: var(--body-font-family);
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 29px;
+  color: #333;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* description (paragraph directly after the title) */
+.cards-insights .cards-insights-card-body > h3 + p {
+  margin: 13px 0 26px;
+  font-size: 16px;
+  line-height: 24px;
+  color: #333;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* date (paragraph after the description) — pushed to the bottom-left */
+.cards-insights .cards-insights-card-body > h3 + p + p {
+  margin: auto 0 0;
+  font-size: 16px;
+  line-height: 19.2px;
+  color: #333;
+}
+
+/* link paragraph becomes the green document icon, anchored bottom-right */
+.cards-insights .cards-insights-card-body > p:last-child {
+  margin: 0;
+  position: absolute;
+  right: 16px;
+  bottom: 20px;
+}
+
+.cards-insights .cards-insights-card-body > p:last-child a {
+  display: block;
+  width: 40px;
+  height: 40px;
+  background-color: var(--ms-teal);
+  background-image: url('data:image/svg+xml;utf8,<svg width="22" height="25" viewBox="0 0 22 25" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.7006 0H1.84458C0.826615 0 0 0.785795 0 1.75528V23.2447C0 24.2117 0.826615 25 1.84458 25H19.3923C20.4102 25 21.2369 24.2142 21.2369 23.2447V6.18175L15.7006 0ZM18.0656 5.74804H15.6445V2.91867L18.0656 5.74804ZM19.0377 23.1069H2.23492C2.06399 23.1069 1.93132 22.9921 1.93132 22.8901V2.08695C1.93132 1.9849 2.06143 1.87009 2.23492 1.87009H13.6545V6.40371C13.6545 7.23798 14.3331 7.91407 15.1648 7.91407H19.3387V22.8901C19.3387 22.9947 19.2086 23.1069 19.0377 23.1069Z" fill="white"/><path d="M12.042 7.60792C12.042 8.13859 11.6134 8.56975 11.0802 8.56975H5.88578C5.35512 8.56975 4.92395 8.14114 4.92395 7.60792C4.92395 7.07725 5.35257 6.64609 5.88578 6.64609H11.0802C11.6083 6.64864 12.042 7.07725 12.042 7.60792Z" fill="white"/><path d="M16.5603 12.3839C16.5603 12.9146 16.1317 13.3458 15.5985 13.3458H5.96232C5.43165 13.3458 5.00049 12.9171 5.00049 12.3839C5.00049 11.8533 5.4291 11.4221 5.96232 11.4221H15.6011C16.1292 11.4221 16.5603 11.8507 16.5603 12.3839Z" fill="white"/><path d="M16.5603 17.1574C16.5603 17.688 16.1317 18.1192 15.5985 18.1192H5.96232C5.43165 18.1192 5.00049 17.6906 5.00049 17.1574C5.00049 16.6267 5.4291 16.1955 5.96232 16.1955H15.6011C16.1292 16.1955 16.5603 16.6292 16.5603 17.1574Z" fill="white"/></svg>');
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  font-size: 0;
+  line-height: 0;
+}
+
+/* tablet: 2 columns */
+@media (width >= 600px) {
+  .cards-insights > ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* desktop: 3 columns, wider gap (matches production 32px) */
+@media (width >= 900px) {
+  .cards-insights > ul {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
 }

@@ -1,27 +1,121 @@
+/* cards-capabilities — Morgan Stanley IM "Our Capabilities" colored tile grid.
+   Production ground-truth measured from
+   morganstanley.com/im/en-us/individual-investor.html at 1280px & 1900px.
+   Decorated DOM: .cards-capabilities > ul > li
+     > .cards-capabilities-card-image (placeholder icon — hidden)
+     > .cards-capabilities-card-body (h3 + p[desc] + p>a[link -> arrow button]) */
+
 .cards-capabilities > ul {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
-  gap: 24px;
+  grid-template-columns: 1fr;   /* mobile-first: 1 column */
+  gap: 0;                        /* production tiles touch (measured horizGap 0) */
+}
+
+/* medium: 2 columns */
+@media (width >= 600px) {
+  .cards-capabilities > ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* desktop: 3 columns (measured at 1900px; required at 1280 & 1900) */
+@media (width >= 900px) {
+  .cards-capabilities > ul {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .cards-capabilities > ul > li {
-  border: 1px solid #dadada;
-  background-color: var(--background-color);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 271px;             /* measured shortest tile */
+  padding: 32px 32px 92px;       /* 32px inset; bottom clears the 60px arrow */
+  background-color: var(--ms-navy);
+  color: #fff;
+}
+
+/* placeholder infographic icons in content are not used in production tiles */
+.cards-capabilities .cards-capabilities-card-image {
+  display: none;
 }
 
 .cards-capabilities .cards-capabilities-card-body {
-  margin: 16px;
+  margin: 0;
 }
 
-.cards-capabilities .cards-capabilities-card-image {
-  line-height: 0;
+.cards-capabilities .cards-capabilities-card-body h3 {
+  margin: 24px 0 0;              /* padding-top(32)+margin(24)=56px top inset (measured) */
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 1.1;              /* 35.2px measured */
+  color: inherit;
 }
 
-.cards-capabilities > ul > li img {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
+.cards-capabilities .cards-capabilities-card-body p {
+  margin: 24px 0 0;
+  font-size: 20px;
+  line-height: 1.5;              /* 30px measured */
+  color: inherit;
+}
+
+/* ---- per-tile background colors (measured, nth-child) ---- */
+.cards-capabilities > ul > li:nth-child(1) {            /* Equities */
+  background-color: var(--ms-navy);                     /* rgb(0,43,81) */
+  color: #fff;
+}
+
+.cards-capabilities > ul > li:nth-child(2) {            /* Fixed Income */
+  background-color: var(--ms-tile-gray);                /* rgb(242,242,242) */
+  color: var(--text-color);
+}
+
+.cards-capabilities > ul > li:nth-child(3) {            /* Liquidity */
+  background-color: #3c738a;                            /* rgb(60,115,138) dark-slate */
+  color: #fff;
+}
+
+.cards-capabilities > ul > li:nth-child(4) {            /* Alternative Investments */
+  background-color: var(--ms-primary-blue);             /* rgb(0,90,164) */
+  color: #fff;
+}
+
+.cards-capabilities > ul > li:nth-child(5) {            /* Solutions & Multi-Asset */
+  background-color: #d9f1fb;                            /* rgb(217,241,251) light-blue-15 */
+  color: var(--text-color);
+}
+
+.cards-capabilities > ul > li:nth-child(6) {            /* Digital Assets */
+  background-color: var(--ms-purple);                   /* brand purple per spec */
+  color: #fff;
+}
+
+/* ---- green square arrow button (bottom-right), from the p>a link ---- */
+.cards-capabilities .cards-capabilities-card-body p:last-child {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+}
+
+.cards-capabilities .cards-capabilities-card-body p:last-child a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background-color: var(--ms-teal);   /* #00857d per spec */
+  font-size: 0;                       /* hide the link's text label */
+  text-decoration: none;
+  border: 0;
+}
+
+.cards-capabilities .cards-capabilities-card-body p:last-child a::after {
+  content: "\2192";                   /* → */
+  font-size: 24px;
+  line-height: 1;
+  color: #fff;
 }
