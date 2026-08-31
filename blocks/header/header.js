@@ -81,14 +81,21 @@ function buildTrigger(li) {
   const nestedList = li.querySelector(':scope > ul');
   if (!nestedList) return null;
 
+  // The label may be a bare text node or wrapped in a <p> before the nested <ul>.
+  // Ignore whitespace-only text nodes; take the first meaningful label source.
   let label = '';
-  const first = li.firstChild;
-  if (first && first.nodeType === Node.TEXT_NODE) {
-    label = first.textContent.trim();
-    first.remove();
-  } else if (first && first.tagName === 'P') {
-    label = first.textContent.trim();
-    first.remove();
+  const leadingP = [...li.children].find((c) => c.tagName === 'P');
+  if (leadingP && !li.querySelector(':scope > .nav-drop-label')) {
+    label = leadingP.textContent.trim();
+    leadingP.remove();
+  } else {
+    // fall back to leading text nodes
+    [...li.childNodes].forEach((n) => {
+      if (n.nodeType === Node.TEXT_NODE && n.textContent.trim() && !label) {
+        label = n.textContent.trim();
+      }
+      if (n.nodeType === Node.TEXT_NODE) n.remove();
+    });
   }
   const trigger = document.createElement('button');
   trigger.type = 'button';
