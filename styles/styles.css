@@ -28,14 +28,19 @@
   --ms-tile-gray: #f2f2f2;
 
   /*
-   * FONT PARITY NOTE: production uses the proprietary brand font "ms-sans", which
-   * is not licensable/obtainable in this environment. Per the agreed decision we
-   * ship roboto for now (NOT true parity). To achieve real parity, add ms-sans
-   * @font-face + files to fonts/ + styles/fonts.css and point the two vars below
-   * at "ms-sans". Type currently renders in roboto as a documented gap.
+   * BRAND FONT — single switch point.
+   * Production uses the proprietary brand font "ms-sans", not licensable/obtainable
+   * here, so by agreed decision we ship roboto for now (NOT true parity). The two
+   * vars below are the ONLY place to change to flip the whole site to the brand
+   * font later — every block reads --body-font-family / --heading-font-family, and
+   * those read these. To provision ms-sans:
+   *   1. Add its @font-face + woff2 files (see the ready stub in styles/fonts.css).
+   *   2. Set both vars below to "ms-sans". No other edits needed.
    */
-  --body-font-family: roboto, roboto-fallback, sans-serif;
-  --heading-font-family: roboto-condensed, roboto-condensed-fallback, sans-serif;
+  --ms-brand-font: roboto;                    /* → ms-sans once provisioned */
+  --ms-brand-heading-font: roboto-condensed;  /* → ms-sans once provisioned */
+  --body-font-family: var(--ms-brand-font), roboto-fallback, sans-serif;
+  --heading-font-family: var(--ms-brand-heading-font), roboto-condensed-fallback, sans-serif;
 
   /* body sizes */
   --body-font-size-m: 22px;
