@@ -47,15 +47,6 @@
   font-family: var(--body-font-family);
 }
 
-/* category eyebrow tag (first paragraph) */
-.cards-insights .cards-insights-card-body > p:first-child {
-  margin: 0 0 24px;
-  font-size: 16px;
-  line-height: 20px;
-  color: #333;
-  text-transform: uppercase;
-}
-
 /* title */
 .cards-insights .cards-insights-card-body > h3 {
   margin: 0;
@@ -88,6 +79,15 @@
   font-size: 16px;
   line-height: 19.2px;
   color: #333;
+}
+
+/* category eyebrow tag (first paragraph) */
+.cards-insights .cards-insights-card-body > p:first-child {
+  margin: 0 0 24px;
+  font-size: 16px;
+  line-height: 20px;
+  color: #333;
+  text-transform: uppercase;
 }
 
 /* link paragraph becomes the green document icon, anchored bottom-right */

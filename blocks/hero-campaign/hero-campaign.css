@@ -19,18 +19,7 @@
   background-color: var(--ms-primary-blue);
 }
 
-/* image row -> absolutely fills the panel behind the content */
-.hero-campaign > div:first-child {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  margin: 0;
-}
-
-.hero-campaign > div:first-child > div {
-  height: 100%;
-}
-
+/* picture/img fill their wrapper (kept first: lowest specificity) */
 .hero-campaign picture {
   display: block;
   width: 100%;
@@ -44,11 +33,23 @@
   object-position: center;
 }
 
+/* image row -> absolutely fills the panel behind the content */
+.hero-campaign > div:first-child {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  margin: 0;
+}
+
 /* content row -> sits above the image, constrained to the site content width */
 .hero-campaign > div:last-child {
   position: relative;
   z-index: 1;
   width: 100%;
+}
+
+.hero-campaign > div:first-child > div {
+  height: 100%;
 }
 
 .hero-campaign > div:last-child > div {
