@@ -19,7 +19,21 @@
   --link-color: #3b63fb;
   --link-hover-color: #1d3ecf;
 
-  /* fonts */
+  /* Morgan Stanley IM brand palette (measured from production individual-investor) */
+  --ms-primary-blue: rgb(0 90 164);   /* hero base + primary brand blue */
+  --ms-navy: #002b49;                 /* dark FEATURED band */
+  --ms-teal: #00857d;                 /* accent: arrows, search button, doc icons */
+  --ms-purple: #59315f;               /* hero + Digital Assets tile accent */
+  --ms-contact-blue: #e6f0f7;         /* light-blue Contact Us band */
+  --ms-tile-gray: #f2f2f2;
+
+  /*
+   * FONT PARITY NOTE: production uses the proprietary brand font "ms-sans", which
+   * is not licensable/obtainable in this environment. Per the agreed decision we
+   * ship roboto for now (NOT true parity). To achieve real parity, add ms-sans
+   * @font-face + files to fonts/ + styles/fonts.css and point the two vars below
+   * at "ms-sans". Type currently renders in roboto as a documented gap.
+   */
   --body-font-family: roboto, roboto-fallback, sans-serif;
   --heading-font-family: roboto-condensed, roboto-condensed-fallback, sans-serif;
 

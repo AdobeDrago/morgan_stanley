@@ -33,8 +33,17 @@ const outIdx = args.indexOf('--out');
 const outFile = outIdx >= 0 ? args[outIdx + 1] : null;
 const upIdx = args.indexOf('--upload');
 const uploadTarget = upIdx >= 0 ? args[upIdx + 1] : null;
+// --media-base rewrites root-relative /media-da/ (and ./media-da/) refs to an
+// absolute URL so DA's html2md can fetch+ingest them at authoring time. Without
+// this, DA cannot resolve the relative path and emits an `about:error` placeholder.
+const mbIdx = args.indexOf('--media-base');
+const mediaBase = mbIdx >= 0 ? args[mbIdx + 1].replace(/\/$/, '') : null;
 
-const html = fs.readFileSync(input, 'utf-8');
+let html = fs.readFileSync(input, 'utf-8');
+if (mediaBase) {
+  html = html
+    .replace(/(["'(])\.?\/media-da\//g, `$1${mediaBase}/media-da/`);
+}
 const dom = new JSDOM(html);
 const { document } = dom.window;
 
@@ -101,6 +110,25 @@ function convertBlock(blockDiv) {
 }
 
 const main = document.querySelector('main') || document.body;
+
+// --- Cleanup pass (non-authorable junk that leaked from the source scrape) ---
+// 1) Tracking beacons / analytics pixels referenced by external hosts.
+Array.from(main.querySelectorAll('img, picture source')).forEach((el) => {
+  const src = el.getAttribute('src') || el.getAttribute('srcset') || '';
+  if (/researchnow\.com|smetrics\.|evidon\.com|doubleclick\.net|\/b\/ss\//.test(src)) {
+    const pic = el.closest('picture');
+    (pic || el).remove();
+  }
+});
+// 2) Leading free-form metadata paragraph (AEM template junk, not page content).
+Array.from(main.querySelectorAll('p')).forEach((p) => {
+  if (/Free Form Template\s+[a-f0-9-]{36}/.test(p.textContent)) p.remove();
+});
+// 3) Empty <p> left behind after beacon removal.
+Array.from(main.querySelectorAll('p')).forEach((p) => {
+  if (!p.textContent.trim() && !p.querySelector('img, picture, a')) p.remove();
+});
+
 const sections = Array.from(main.children).filter((c) => c.tagName === 'DIV');
 
 const outParts = [];
