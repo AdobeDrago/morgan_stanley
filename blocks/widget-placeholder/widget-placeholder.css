@@ -1,0 +1,78 @@
+/*
+ * widget-placeholder — static on-brand stand-in for the dynamic product-search /
+ * fund-quote widgets. Sits on the dark-blue section band (section style="dark-blue").
+ */
+
+.widget-placeholder {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 0;
+}
+
+.widget-placeholder-search {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.widget-placeholder-label {
+  color: #fff;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.widget-placeholder-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border-radius: 2px;
+  padding: 12px 16px;
+  max-width: 520px;
+}
+
+.widget-placeholder-input {
+  color: #6a6a6a;
+  font-size: 16px;
+}
+
+.widget-placeholder-icon {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #00857d;
+  border-radius: 50%;
+  position: relative;
+}
+
+.widget-placeholder-icon::after {
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 8px;
+  background: #00857d;
+  transform: rotate(-45deg);
+  right: -4px;
+  bottom: -5px;
+}
+
+.widget-placeholder-frame {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.widget-placeholder-card {
+  height: 96px;
+  background: rgba(255, 255, 255, 8%);
+  border: 1px solid rgba(255, 255, 255, 20%);
+  border-radius: 4px;
+}
+
+@media (width >= 900px) {
+  .widget-placeholder-frame {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

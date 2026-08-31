@@ -1,0 +1,38 @@
+{
+  "variantName": "cards-platform",
+  "baseBlock": "cards",
+  "version": "1.0.0",
+  "created": "2026-08-31",
+  "sourceContext": {
+    "originUrl": "https://www.morganstanley.com/im/en-us/individual-investor/capabilities/fixed-income.html",
+    "originPage": "Fixed Income capability detail page",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "colored",
+    "density": "compact",
+    "purpose": "platform-product-tiles",
+    "imagePattern": "noimg"
+  },
+  "contentPattern": {
+    "structure": "solid full-color tile + title + corner arrow link (no icon, no description)",
+    "buttonCount": 1,
+    "imageCount": 0
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "colored product/category tile grids inside a dark band",
+      "linked tiles with only a title and an arrow (no icon, no body copy)",
+      "platform/offering navigation grids"
+    ],
+    "notSuitableFor": [
+      "white bordered cards with icon + one-line description (use cards-capabilities)",
+      "article/news cards with photographic thumbnails and dates (use cards-insights)"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/im/en-us/individual-investor/capabilities/fixed-income"],
+    "reuseCount": 1,
+    "lastUsed": "2026-08-31"
+  }
+}

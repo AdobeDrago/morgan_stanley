@@ -1,0 +1,47 @@
+.hero-capability-container .hero-capability-wrapper {
+  max-width: unset;
+  padding: 0;
+}
+
+.hero-capability {
+  position: relative;
+  padding: 40px 24px;
+  min-height: 300px;
+}
+
+.hero-capability h1,
+.hero-capability h2,
+.hero-capability h3,
+.hero-capability h4,
+.hero-capability h5,
+.hero-capability h6,
+.hero-capability p {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  color: var(--background-color);
+}
+
+.hero-capability.no-image * {
+  color: var(--text-color);
+}
+
+.hero-capability picture {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  object-fit: cover;
+  box-sizing: border-box;
+}
+
+.hero-capability img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+@media (width >= 900px) {
+  .hero-capability {
+    padding: 40px 32px;
+  }
+}

@@ -1,0 +1,27 @@
+.cards-explore > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
+  gap: 24px;
+}
+
+.cards-explore > ul > li {
+  position: relative;
+  min-height: 160px;
+  background-color: #eef4fb;
+}
+
+.cards-explore .cards-explore-card-body {
+  margin: 24px;
+}
+
+.cards-explore .cards-explore-card-image {
+  line-height: 0;
+}
+
+.cards-explore > ul > li img {
+  width: 100%;
+  object-fit: cover;
+}

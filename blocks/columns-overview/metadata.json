@@ -1,0 +1,39 @@
+{
+  "variantName": "columns-overview",
+  "baseBlock": "columns",
+  "version": "1.0.0",
+  "created": "2026-08-31T00:00:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.morganstanley.com/im/en-us/individual-investor/campaigns/liquidity",
+    "originPage": "Global Liquidity campaign landing page",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "spacious",
+    "purpose": "overview-text-columns",
+    "imagePattern": "noimg"
+  },
+  "contentPattern": {
+    "structure": "3 balanced text columns, each: accent line + short heading + paragraph",
+    "buttonCount": 0,
+    "imageCount": 0
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "image-free 3-up text column overviews on a light background",
+      "short heading + paragraph informational columns with an accent rule",
+      "'Overview'-style intro column bands"
+    ],
+    "notSuitableFor": [
+      "numbered/labelled feature columns with large numerals or bullet lists (use columns-numbered)",
+      "image + copy promo bands (use columns-featured)",
+      "discrete linked/repeatable tiles (use a cards variant)"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/im/en-us/individual-investor/campaigns/liquidity"],
+    "reuseCount": 1,
+    "lastUsed": "2026-08-31T00:00:00.000Z"
+  }
+}

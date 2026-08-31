@@ -1,0 +1,38 @@
+{
+  "variantName": "columns-featured",
+  "baseBlock": "columns",
+  "version": "1.0.0",
+  "created": "2026-08-31",
+  "sourceContext": {
+    "originUrl": "https://www.morganstanley.com/im/en-us/individual-investor.html",
+    "originPage": "Individual Investor landing page",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "dark",
+    "density": "spacious",
+    "purpose": "featured-promo",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "graphic column beside text column (eyebrow + heading + paragraph + CTA)",
+    "buttonCount": 1,
+    "imageCount": 1
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "featured promo bands with a graphic beside text and a CTA",
+      "two-column image + copy call-outs",
+      "dark-band highlight sections"
+    ],
+    "notSuitableFor": [
+      "repeating multi-item card grids",
+      "3+ column balanced text layouts"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/im/en-us/individual-investor"],
+    "reuseCount": 1,
+    "lastUsed": "2026-08-31"
+  }
+}

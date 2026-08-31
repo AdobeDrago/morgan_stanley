@@ -1,0 +1,41 @@
+{
+  "variantName": "cards-insights",
+  "baseBlock": "cards",
+  "version": "1.0.0",
+  "created": "2026-08-31",
+  "sourceContext": {
+    "originUrl": "https://www.morganstanley.com/im/en-us/individual-investor.html",
+    "originPage": "Individual Investor landing page",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "spacious",
+    "purpose": "insights-articles",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "thumbnail image + category tag + title + short description + date",
+    "buttonCount": 0,
+    "imageCount": 1
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "article/insight/news card rows with photographic thumbnails",
+      "featured content lists with category tag and publish date",
+      "blog or media roundups"
+    ],
+    "notSuitableFor": [
+      "colored icon tile navigation grids",
+      "cards with no image"
+    ]
+  },
+  "usage": {
+    "pagesUsing": [
+      "/im/en-us/individual-investor",
+      "/im/en-us/individual-investor/capabilities/fixed-income"
+    ],
+    "reuseCount": 2,
+    "lastUsed": "2026-08-31"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "variantName": "hero-capability",
+  "baseBlock": "hero",
+  "version": "1.0.0",
+  "created": "2026-08-31",
+  "sourceContext": {
+    "originUrl": "https://www.morganstanley.com/im/en-us/individual-investor/capabilities/fixed-income.html",
+    "originPage": "Fixed Income capability detail page",
+    "blockPosition": "top"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "spacious",
+    "purpose": "capability-title-banner",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "large title on light left panel + decorative abstract graphic on right (no subheading, no CTA)",
+    "buttonCount": 0,
+    "imageCount": 1
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "capability/product detail page title banners",
+      "light split banners with a title beside a decorative graphic",
+      "section-lead banners without a call-to-action"
+    ],
+    "notSuitableFor": [
+      "dark full-bleed campaign heroes with a CTA (use hero-campaign)",
+      "text-only intros with no graphic"
+    ]
+  },
+  "usage": {
+    "pagesUsing": [
+      "/im/en-us/individual-investor/capabilities/fixed-income",
+      "/im/en-us/individual-investor/campaigns/liquidity"
+    ],
+    "reuseCount": 2,
+    "lastUsed": "2026-08-31"
+  }
+}
