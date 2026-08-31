@@ -1,0 +1,262 @@
+{
+  "manifest": "Morgan Stanley Investment Management — Individual Investor migration",
+  "generated": "2026-08-31",
+  "project": {
+    "type": "doc",
+    "source": "https://www.morganstanley.com/im/en-us/",
+    "contentSource": {
+      "provider": "Document Authoring (DA.live)",
+      "org": "adobedrago",
+      "repo": "morgan-stanley",
+      "folder": "https://da.live/#/adobedrago/morgan-stanley/im/en-us"
+    }
+  },
+  "summary": {
+    "totalPages": 7,
+    "totalTemplates": 3,
+    "blocksCreated": 8,
+    "blocksReused": 1,
+    "allImported": true,
+    "allUploadedToDA": true
+  },
+  "templates": [
+    {
+      "name": "individual-investor",
+      "description": "Individual investor landing and capability pages: campaign hero, dynamic product-search/NAV widgets, capability tiles, featured promo band, featured insights cards, and a contact band.",
+      "urlPattern": "/im/en-us/*",
+      "representativeUrl": "https://www.morganstanley.com/im/en-us/individual-investor.html",
+      "pageCount": 4,
+      "blocks": ["hero-campaign", "widget", "cards-capabilities", "columns-featured", "cards-insights"],
+      "sections": ["Campaign hero", "Product search and fund quotes", "Our Capabilities", "Featured promo band", "Featured Insights"],
+      "importScript": "tools/importer/import-individual-investor.js"
+    },
+    {
+      "name": "capabilities",
+      "description": "Capability detail pages: split title banner, overview, key differentiators (numbered columns), product platform tiles, and featured insights.",
+      "urlPattern": "/im/en-us/individual-investor/capabilities/*",
+      "representativeUrl": "https://www.morganstanley.com/im/en-us/individual-investor/capabilities/fixed-income.html",
+      "pageCount": 2,
+      "blocks": ["hero-capability", "columns-numbered", "cards-platform", "cards-insights"],
+      "sections": ["Title banner", "Overview", "Key Differentiators", "Product Platform", "Featured Insights"],
+      "importScript": "tools/importer/import-capabilities.js"
+    },
+    {
+      "name": "campaigns",
+      "description": "Campaign landing page: split title banner, overview text columns, fund-list section headings, explore-more tiles, and contact band.",
+      "urlPattern": "/im/en-us/individual-investor/campaigns/*",
+      "representativeUrl": "https://www.morganstanley.com/im/en-us/individual-investor/campaigns/liquidity",
+      "pageCount": 1,
+      "blocks": ["hero-capability", "columns-overview", "cards-explore"],
+      "sections": ["Global Liquidity hero", "Overview", "Explore More"],
+      "importScript": "tools/importer/import-campaigns.js",
+      "notes": "Two fund tables (Institutional Liquidity Funds, Bond Funds) imported as HEADINGS ONLY; dynamic table DOM stripped via campaigns-fund-tables.js so no volatile product data is captured."
+    }
+  ],
+  "pages": [
+    {
+      "sourceUrl": "https://www.morganstanley.com/im/en-us/individual-investor.html",
+      "template": "individual-investor",
+      "contentFile": "content/im/en-us/individual-investor.plain.html",
+      "daPath": "im/en-us/individual-investor",
+      "daEditUrl": "https://da.live/edit#/adobedrago/morgan-stanley/im/en-us/individual-investor",
+      "status": "imported+uploaded",
+      "blocksUsed": ["hero-campaign", "widget", "cards-capabilities", "columns-featured", "cards-insights"]
+    },
+    {
+      "sourceUrl": "https://www.morganstanley.com/im/en-us/individual-investor/capabilities/alternatives.html",
+      "template": "individual-investor",
+      "contentFile": "content/im/en-us/individual-investor/capabilities/alternatives.plain.html",
+      "daPath": "im/en-us/individual-investor/capabilities/alternatives",
+      "daEditUrl": "https://da.live/edit#/adobedrago/morgan-stanley/im/en-us/individual-investor/capabilities/alternatives",
+      "status": "imported+uploaded",
+      "blocksUsed": ["columns-featured", "cards-insights"]
+    },
+    {
+      "sourceUrl": "https://www.morganstanley.com/im/en-us/individual-investor/capabilities/crypto.html",
+      "template": "individual-investor",
+      "contentFile": "content/im/en-us/individual-investor/capabilities/crypto.plain.html",
+      "daPath": "im/en-us/individual-investor/capabilities/crypto",
+      "daEditUrl": "https://da.live/edit#/adobedrago/morgan-stanley/im/en-us/individual-investor/capabilities/crypto",
+      "status": "imported+uploaded",
+      "blocksUsed": ["cards-insights"]
+    },
+    {
+      "sourceUrl": "https://www.morganstanley.com/im/en-us/individual-investor/capabilities/equity.html",
+      "template": "individual-investor",
+      "contentFile": "content/im/en-us/individual-investor/capabilities/equity.plain.html",
+      "daPath": "im/en-us/individual-investor/capabilities/equity",
+      "daEditUrl": "https://da.live/edit#/adobedrago/morgan-stanley/im/en-us/individual-investor/capabilities/equity",
+      "status": "imported+uploaded",
+      "blocksUsed": ["cards-insights"]
+    },
+    {
+      "sourceUrl": "https://www.morganstanley.com/im/en-us/individual-investor/capabilities/fixed-income.html",
+      "template": "capabilities",
+      "contentFile": "content/im/en-us/individual-investor/capabilities/fixed-income.plain.html",
+      "daPath": "im/en-us/individual-investor/capabilities/fixed-income",
+      "daEditUrl": "https://da.live/edit#/adobedrago/morgan-stanley/im/en-us/individual-investor/capabilities/fixed-income",
+      "status": "imported+uploaded",
+      "blocksUsed": ["hero-capability", "columns-numbered", "cards-platform", "cards-insights"]
+    },
+    {
+      "sourceUrl": "https://www.morganstanley.com/im/en-us/individual-investor/capabilities/solutions-and-multi-asset.html",
+      "template": "capabilities",
+      "contentFile": "content/im/en-us/individual-investor/capabilities/solutions-and-multi-asset.plain.html",
+      "daPath": "im/en-us/individual-investor/capabilities/solutions-and-multi-asset",
+      "daEditUrl": "https://da.live/edit#/adobedrago/morgan-stanley/im/en-us/individual-investor/capabilities/solutions-and-multi-asset",
+      "status": "imported+uploaded",
+      "blocksUsed": ["hero-capability", "columns-numbered", "cards-insights"]
+    },
+    {
+      "sourceUrl": "https://www.morganstanley.com/im/en-us/individual-investor/campaigns/liquidity",
+      "template": "campaigns",
+      "contentFile": "content/im/en-us/individual-investor/campaigns/liquidity.plain.html",
+      "daPath": "im/en-us/individual-investor/campaigns/liquidity",
+      "daEditUrl": "https://da.live/edit#/adobedrago/morgan-stanley/im/en-us/individual-investor/campaigns/liquidity",
+      "status": "imported+uploaded",
+      "blocksUsed": ["hero-capability", "columns-overview", "cards-explore"]
+    }
+  ],
+  "blocks": [
+    {
+      "name": "hero-campaign",
+      "baseBlock": "hero",
+      "origin": "new",
+      "createdInTemplate": "individual-investor",
+      "usedInTemplates": ["individual-investor"],
+      "dir": "blocks/hero-campaign/",
+      "parser": "tools/importer/parsers/hero-campaign.js",
+      "purpose": "Full-bleed campaign banner: background image + heading + subheading + CTA."
+    },
+    {
+      "name": "hero-capability",
+      "baseBlock": "hero",
+      "origin": "new",
+      "createdInTemplate": "capabilities",
+      "usedInTemplates": ["capabilities", "campaigns"],
+      "dir": "blocks/hero-capability/",
+      "parser": "tools/importer/parsers/hero-capability.js",
+      "purpose": "Light split title banner: page title on a solid panel beside a decorative graphic, no CTA."
+    },
+    {
+      "name": "cards-capabilities",
+      "baseBlock": "cards",
+      "origin": "new",
+      "createdInTemplate": "individual-investor",
+      "usedInTemplates": ["individual-investor"],
+      "dir": "blocks/cards-capabilities/",
+      "parser": "tools/importer/parsers/cards-capabilities.js",
+      "purpose": "Colored capability tiles: icon + title + one-line description + arrow link."
+    },
+    {
+      "name": "cards-insights",
+      "baseBlock": "cards",
+      "origin": "new",
+      "createdInTemplate": "individual-investor",
+      "usedInTemplates": ["individual-investor", "capabilities"],
+      "dir": "blocks/cards-insights/",
+      "parser": "tools/importer/parsers/cards-insights.js",
+      "purpose": "Article/insight cards: thumbnail + category tag + title + description + date."
+    },
+    {
+      "name": "cards-platform",
+      "baseBlock": "cards",
+      "origin": "new",
+      "createdInTemplate": "capabilities",
+      "usedInTemplates": ["capabilities"],
+      "dir": "blocks/cards-platform/",
+      "parser": "tools/importer/parsers/cards-platform.js",
+      "purpose": "Solid colored product-platform tiles: title + corner arrow link, no icon/description."
+    },
+    {
+      "name": "cards-explore",
+      "baseBlock": "cards",
+      "origin": "new",
+      "createdInTemplate": "campaigns",
+      "usedInTemplates": ["campaigns"],
+      "dir": "blocks/cards-explore/",
+      "parser": "tools/importer/parsers/cards-explore.js",
+      "purpose": "Colored 'Explore More' tiles: title + description + arrow link."
+    },
+    {
+      "name": "columns-featured",
+      "baseBlock": "columns",
+      "origin": "new",
+      "createdInTemplate": "individual-investor",
+      "usedInTemplates": ["individual-investor"],
+      "dir": "blocks/columns-featured/",
+      "parser": "tools/importer/parsers/columns-featured.js",
+      "purpose": "Dark 'FEATURED' promo band: graphic column beside eyebrow + heading + paragraph + CTA."
+    },
+    {
+      "name": "columns-numbered",
+      "baseBlock": "columns",
+      "origin": "new",
+      "createdInTemplate": "capabilities",
+      "usedInTemplates": ["capabilities"],
+      "dir": "blocks/columns-numbered/",
+      "parser": "tools/importer/parsers/columns-numbered.js",
+      "purpose": "'Key Differentiators' — 3 balanced text columns: large numeral + subheading + bullet list."
+    },
+    {
+      "name": "columns-overview",
+      "baseBlock": "columns",
+      "origin": "new",
+      "createdInTemplate": "campaigns",
+      "usedInTemplates": ["campaigns"],
+      "dir": "blocks/columns-overview/",
+      "parser": "tools/importer/parsers/columns-overview.js",
+      "purpose": "'Overview' — 3 text columns each with an accent line, heading, and paragraph."
+    },
+    {
+      "name": "widget",
+      "baseBlock": "widget",
+      "origin": "reused-existing-project-block",
+      "createdInTemplate": null,
+      "usedInTemplates": ["individual-investor"],
+      "dir": "blocks/widget/",
+      "parser": "tools/importer/parsers/widget.js",
+      "purpose": "Loads external dynamic widget assets by authored name (product search, live NAV fund quotes). Reference only — live/injected market data intentionally not captured."
+    }
+  ],
+  "infrastructure": {
+    "pageTemplates": "tools/importer/page-templates.json",
+    "parsers": [
+      "tools/importer/parsers/hero-campaign.js",
+      "tools/importer/parsers/hero-capability.js",
+      "tools/importer/parsers/cards-capabilities.js",
+      "tools/importer/parsers/cards-insights.js",
+      "tools/importer/parsers/cards-platform.js",
+      "tools/importer/parsers/cards-explore.js",
+      "tools/importer/parsers/columns-featured.js",
+      "tools/importer/parsers/columns-numbered.js",
+      "tools/importer/parsers/columns-overview.js",
+      "tools/importer/parsers/widget.js"
+    ],
+    "transformers": [
+      "tools/importer/transformers/morganstanley-cleanup.js",
+      "tools/importer/transformers/morganstanley-sections.js",
+      "tools/importer/transformers/campaigns-fund-tables.js"
+    ],
+    "importScripts": [
+      "tools/importer/import-individual-investor.js",
+      "tools/importer/import-capabilities.js",
+      "tools/importer/import-campaigns.js"
+    ],
+    "reports": [
+      "tools/importer/reports/import-individual-investor.report.xlsx",
+      "tools/importer/reports/import-capabilities.report.xlsx",
+      "tools/importer/reports/import-campaigns.report.xlsx"
+    ]
+  },
+  "decisions": [
+    "Live product-search and NAV fund-quote components on the landing page are kept as 'widget' references (no static snapshot of volatile market data).",
+    "campaigns/liquidity fund tables imported as headings only; dynamic table DOM stripped via a campaigns-specific transformer.",
+    "Blocks were reused across templates where structurally similar (hero-capability, cards-insights, widget) to avoid duplicates.",
+    "DA content source corrected from 'morgan_stanley' (underscore) to 'morgan-stanley' (hyphen) to match the real project repo."
+  ],
+  "outstanding": [
+    "Design/styling not yet applied — pages import as unstructured default styling.",
+    "Stray earlier copies of the 4 individual-investor pages may still exist in the old adobedrago/morgan_stanley (underscore) DA repo."
+  ]
+}
