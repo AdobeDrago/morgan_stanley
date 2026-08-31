@@ -124,6 +124,22 @@ Array.from(main.querySelectorAll('img, picture source')).forEach((el) => {
 Array.from(main.querySelectorAll('p')).forEach((p) => {
   if (/Free Form Template\s+[a-f0-9-]{36}/.test(p.textContent)) p.remove();
 });
+// 2b) Share/print utility strip (Scroll Up "Top", Share, Email, Print) — page chrome.
+//     Identify by the utility icon alts, then drop the whole <p> each sits in, plus
+//     the adjacent text-label <p> (Share/Print) and dummy href="#" links.
+Array.from(main.querySelectorAll('img')).forEach((img) => {
+  if (/^(Scroll Up|Share icon|Email icon|Print icon)$/.test(img.getAttribute('alt') || '')) {
+    const p = img.closest('p');
+    if (p) p.remove();
+  }
+});
+Array.from(main.querySelectorAll('p')).forEach((p) => {
+  const t = p.textContent.trim();
+  const onlyHashLink = p.querySelector('a[href="#"]') && !p.querySelector('img')
+    && /^(Share|Email|Print|Top)$/.test(t);
+  if (/^(Share|Print)$/.test(t) && !p.querySelector('a, img')) p.remove();
+  else if (onlyHashLink) p.remove();
+});
 // 3) Empty <p> left behind after beacon removal.
 Array.from(main.querySelectorAll('p')).forEach((p) => {
   if (!p.textContent.trim() && !p.querySelector('img, picture, a')) p.remove();
