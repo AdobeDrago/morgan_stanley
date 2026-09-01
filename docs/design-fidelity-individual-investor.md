@@ -33,7 +33,33 @@
 - **columns-featured**: navy band, 40/60 split, pixel graphic left, white square-outline Explore ✓. ~95%.
 - **cards-insights**: 3 cards, image + uppercase tag + title + desc + date + green doc icon ✓. ~95%.
 
-## Known gaps / out of scope
-- **Font parity (ms-sans)** — documented above; roboto shipped.
-- **Header/footer 404s** — the site nav (`/nav`) and footer (`/footer`) documents don't exist yet; that's separate site-chrome migration (navigation/footer orchestrators), not this page-body task.
-- A few intentional color deltas where brand vars were used over exact production values (e.g. navy `#002b49` vs measured `#002b51`; Digital Assets tile uses brand purple; teal icons use `--ms-teal`).
+## Header / navigation (built)
+The MS Individual Investor header now renders from an authored nav doc + a
+click-to-open mega-menu, replacing the aem.live boilerplate nav.
+- **Nav doc**: `/im/en-us/nav` (source in `tools/importer/nav.da.html`), three
+  section parts → brand | sections | tools. Wired via a `nav` metadata entry on
+  the four im/en-us pages (does not clobber the site-root `/nav`).
+- **Behavior** (`blocks/header/header.js`): each top-level item opens a full-width
+  mega-menu ON CLICK; single-open; outside-click and Escape close; teal active
+  underline; every child link is a real navigating `<a>`.
+- **Per-menu**: Capabilities → navy "Crypto" featured card; Insights → purple
+  "The BEAT™" card + nested "Series" submenu; Products → static navy fund-card
+  placeholder (no live market data, per the widget-placeholder decision);
+  Resources / About Us → link lists.
+- **Link targets**: migrated EDS pages where they exist (equity, fixed-income,
+  alternatives, solutions-and-multi-asset, crypto); others point at the
+  production URL (flagged external). Verified at 1280px and 1900px.
+- **Styling** (`blocks/header/header.css`): white main bar, brand lockup, menu
+  typography, teal underline, mega-menu panels + colored featured cards, outlined
+  Contact Us button, utility strip (country/Account Access dropdowns + Login),
+  search control. Uses brand tokens + `--ms-brand-font` (roboto today).
+
+## Known gaps / follow-ups
+- **Font parity (ms-sans)** — documented above; roboto shipped. `--ms-brand-font`
+  / `--ms-brand-heading-font` are the single switch point.
+- **Footer** — the `/footer` document doesn't exist yet, so the footer block
+  still errors/renders boilerplate. This is a separate follow-up (footer
+  migration), analogous to the header work done here.
+- A few intentional color deltas where brand vars were used over exact production
+  values (e.g. navy `#002b49` vs measured `#002b51`; Digital Assets tile uses
+  brand purple; teal icons use `--ms-teal`).
