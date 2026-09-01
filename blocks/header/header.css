@@ -190,6 +190,13 @@ header nav .nav-drop-label {
   header nav[aria-expanded='true'] {
     min-height: 0;
     overflow: visible;
+
+    /* keep the two-row desktop layout even while aria-expanded is true (this
+       attribute selector out-specifies the plain `header nav` rule above) */
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      'tools tools'
+      'brand sections';
   }
 
   header nav .nav-hamburger {
