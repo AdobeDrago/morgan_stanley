@@ -54,12 +54,21 @@ click-to-open mega-menu, replacing the aem.live boilerplate nav.
   Contact Us button, utility strip (country/Account Access dropdowns + Login),
   search control. Uses brand tokens + `--ms-brand-font` (roboto today).
 
+## Footer (built)
+The MS footer now renders from an authored footer doc, replacing the boilerplate.
+- **Footer doc**: `/im/en-us/footer` (source in `tools/importer/footer.da.html`),
+  wired via a `footer` metadata entry on the four im/en-us pages.
+- **Content** (mirrors production): brand + LinkedIn row; affiliate links (Morgan
+  Stanley, Careers, Eaton Vance, Calvert, Parametric); the full legal/disclosure
+  block (FINRA BrokerCheck, prospectus, MSIM affiliates, FDIC line, © 2026); and
+  a bottom link row (Subscriptions, Privacy & Cookies, Terms of Use, Mutual Funds
+  & Unclaimed Property, Proxy Voting, Proxy Voting - AIP, MSIM/AIP Form CRS).
+- **Styling** (`blocks/footer/footer.css`): light footer, inline affiliate row,
+  small-print disclosures, inline bottom link row. Verified at 1280/1900px.
+
 ## Known gaps / follow-ups
 - **Font parity (ms-sans)** — documented above; roboto shipped. `--ms-brand-font`
   / `--ms-brand-heading-font` are the single switch point.
-- **Footer** — the `/footer` document doesn't exist yet, so the footer block
-  still errors/renders boilerplate. This is a separate follow-up (footer
-  migration), analogous to the header work done here.
 - A few intentional color deltas where brand vars were used over exact production
   values (e.g. navy `#002b49` vs measured `#002b51`; Digital Assets tile uses
   brand purple; teal icons use `--ms-teal`).
