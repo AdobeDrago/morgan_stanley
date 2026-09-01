@@ -1,20 +1,100 @@
+/*
+ * Morgan Stanley IM — Individual Investor footer.
+ * Production is a light footer: brand/affiliate link rows, a block of small-print
+ * legal disclosures, and an inline bottom link row. Four decorated sections
+ * (.footer > div > .section): [0] brand+LinkedIn, [1] affiliate links,
+ * [2] disclosures, [3] bottom link list.
+ */
+
 footer {
-  background-color: var(--light-color);
-  font-size: var(--body-font-size-xs);
+  background-color: #f4f4f4;
+  color: #333;
+  font-family: var(--ms-brand-font);
+  border-top: 1px solid #e0e0e0;
 }
 
 footer .footer > div {
-  margin: auto;
-  max-width: 1200px;
-  padding: 40px 24px 24px;
+  box-sizing: border-box;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 40px 24px 32px;
 }
 
 footer .footer p {
   margin: 0;
 }
 
+footer .footer a:any-link {
+  color: var(--ms-primary-blue);
+  text-decoration: none;
+}
+
+footer .footer a:hover {
+  text-decoration: underline;
+}
+
+/* [0] brand row */
+footer .footer .section:nth-child(1) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 24px;
+  padding-bottom: 16px;
+}
+
+footer .footer .section:nth-child(1) strong {
+  color: var(--ms-primary-blue);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* [1] affiliate link row — inline, separated */
+footer .footer .section:nth-child(2) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+  padding-top: 8px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #ddd;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* [2] disclosures — small print, muted, comfortable line-height */
+footer .footer .section:nth-child(3) {
+  padding-top: 24px;
+  color: #6a6a6a;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+footer .footer .section:nth-child(3) p {
+  margin: 0 0 12px;
+}
+
+footer .footer .section:nth-child(3) a:any-link {
+  color: #6a6a6a;
+  text-decoration: underline;
+}
+
+/* [3] bottom link row — inline list, small, wraps */
+footer .footer .section:nth-child(4) ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  margin: 0;
+  padding: 20px 0 0;
+  list-style: none;
+  border-top: 1px solid #ddd;
+  font-size: 13px;
+}
+
+footer .footer .section:nth-child(4) li {
+  margin: 0;
+}
+
 @media (width >= 900px) {
   footer .footer > div {
-    padding: 40px 32px 24px;
+    padding: 48px 40px 32px;
   }
 }
