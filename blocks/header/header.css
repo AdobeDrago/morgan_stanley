@@ -119,20 +119,20 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
   transform: rotate(-45deg);
 }
 
-/* ---- brand lockup ------------------------------------------------------ */
+/* ---- brand lockup (MSIM SVG wordmark) ---------------------------------- */
 header .nav-brand {
   grid-area: brand;
-  font-family: var(--ms-brand-heading-font);
 }
 
-header .nav-brand a {
-  display: inline-block;
-  color: var(--ms-primary-blue);
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: 0.2px;
-  white-space: normal;
+header nav .nav-brand a {
+  display: inline-flex;
+  align-items: center;
+}
+
+header nav .nav-brand img {
+  display: block;
+  width: 184px;
+  height: auto;
 }
 
 /* ---- sections (main menu) --------------------------------------------- */
