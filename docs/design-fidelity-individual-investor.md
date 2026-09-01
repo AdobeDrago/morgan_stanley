@@ -66,6 +66,18 @@ The MS footer now renders from an authored footer doc, replacing the boilerplate
 - **Styling** (`blocks/footer/footer.css`): light footer, inline affiliate row,
   small-print disclosures, inline bottom link row. Verified at 1280/1900px.
 
+## Site-wide header/footer (bulk metadata)
+Header and footer are applied site-wide via a bulk-metadata sheet, not per page.
+- **Sheet**: `/metadata` (DA `metadata.json`, source `tools/importer/metadata.sheet.json`)
+  with one rule: `URL=/**` → `nav=/im/en-us/nav`, `footer=/im/en-us/footer`.
+  Every page (current and future) inherits the MS header + footer automatically.
+- The per-page `nav`/`footer` metadata rows were removed from the four im/en-us
+  pages so the sheet is the single source of truth (page-level would override it).
+- To change the header/footer for a subtree later, add a more specific `URL`
+  row (e.g. `/im/en-gb/**`) above/below per the top-to-bottom precedence rule.
+- Verified: pages with no page-level nav/footer meta still emit
+  `<meta name="nav">` / `<meta name="footer">` and render both.
+
 ## Known gaps / follow-ups
 - **Font parity (ms-sans)** — documented above; roboto shipped. `--ms-brand-font`
   / `--ms-brand-heading-font` are the single switch point.
