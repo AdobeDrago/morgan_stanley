@@ -174,13 +174,17 @@ header nav .nav-drop-label {
   header .nav-wrapper { position: relative; }
 
   header nav {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      'tools tools'
+      'brand sections';
     align-items: center;
-    justify-content: space-between;
-    gap: 0 32px;
+    column-gap: 32px;
+    row-gap: 4px;
     max-width: none;
-    height: 96px;
-    padding: 0 40px;
+    height: auto;
+    padding: 10px 40px;
   }
 
   header nav[aria-expanded='true'] {
@@ -283,7 +287,7 @@ header nav .nav-drop-label {
     position: absolute;
     left: 0;
     right: 0;
-    top: 96px;
+    top: 100%;
     z-index: 5;
     box-sizing: border-box;
     padding: 40px max(40px, calc((100% - 1280px) / 2 + 40px)) 56px;
@@ -405,8 +409,15 @@ header nav .nav-drop-label {
     grid-area: tools;
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     gap: 20px;
+    width: 100%;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e6e6e6;
   }
+
+  /* brand stays a single line in the main bar (no skinny-column wrap) */
+  header nav .nav-brand a { white-space: nowrap; }
 
   header nav .nav-tools .default-content-wrapper > ul {
     display: flex;
