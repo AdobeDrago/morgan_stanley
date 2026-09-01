@@ -53,6 +53,12 @@ click-to-open mega-menu, replacing the aem.live boilerplate nav.
   typography, teal underline, mega-menu panels + colored featured cards, outlined
   Contact Us button, utility strip (country/Account Access dropdowns + Login),
   search control. Uses brand tokens + `--ms-brand-font` (roboto today).
+- **Brand logo**: the nav-brand is the real MSIM SVG wordmark (not text). Source
+  `MSIM-Logo.svg` was ingested into DA at `/media-da/msim-logo.svg` (absolute
+  preview URL, same asset flow as page images) and referenced inside the home
+  link with alt "Morgan Stanley Investment Management". CSS renders it at 184px
+  wide, auto height (verified 184×47 at 1280 and 1900px). Applies site-wide via
+  the shared nav doc + bulk-metadata sheet.
 
 ## Footer (built)
 The MS footer now renders from an authored footer doc, replacing the boilerplate.
