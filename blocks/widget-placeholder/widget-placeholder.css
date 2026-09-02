@@ -1,15 +1,33 @@
 /*
  * widget-placeholder — on-brand product-search bar + hard-coded fund quote cards.
- * Sits on the dark-blue section band (section style="dark-blue").
+ * Production renders this as a CENTERED, contained navy card (page margins on
+ * both sides), not a full-bleed band. So for the widget's section we cancel the
+ * full-bleed `dark-blue` band and paint the navy on the widget box itself.
+ * (Higher specificity than styles.css `main .section.dark-blue`, and scoped to
+ * the widget container so the full-bleed FEATURED band is unaffected.)
  */
+main .section.dark-blue.widget-placeholder-container {
+  background-color: transparent;
+  color: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+main .section.dark-blue.widget-placeholder-container > div {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
 
 .widget-placeholder {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 0 32px;
+  max-width: none;
+  margin: 0;
+  padding: 40px;
+  background-color: var(--ms-navy);
+  color: #fff;
 }
 
 /* --- product search bar --- */
@@ -81,7 +99,6 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 24px;
-  padding: 0 24px;
 }
 
 .widget-placeholder-fund {
