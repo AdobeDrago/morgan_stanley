@@ -30,7 +30,7 @@ main .section.dark-blue.widget-placeholder-container > div {
      the hero banner (~96px), rendered above it via z-index. */
   width: 82.5vw;
   max-width: 1264px;
-  margin: -96px auto 0;
+  margin: -136px auto 0; /* nets ~96px overlap onto the hero (40px section gap absorbed) */
   padding: 40px;
   position: relative;
   z-index: 2;
