@@ -147,6 +147,8 @@ main .section.widget-placeholder-container .default-content-wrapper h2 {
 }
 
 .widget-placeholder-fund-navdate {
+  margin-top: auto; /* pin NAV date + price to the card bottom so they align across
+                       cards regardless of fund-name line count (matches production) */
   font-size: 13px;
   font-weight: 700;
   margin-bottom: 4px;
