@@ -23,14 +23,21 @@ main .section.dark-blue.widget-placeholder-container > div {
   display: flex;
   flex-direction: column;
   gap: 24px;
-
-  /* production renders this as a full-bleed navy band edge-to-edge (not a
-     contained card); break out of the section container, content centered to 1200 */
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
+  width: 100%;
+  margin: 0;
   padding: 40px max(24px, calc((100% - 1200px) / 2));
   background-color: var(--ms-navy);
   color: #fff;
+}
+
+/* full-bleed navy band (production): cancel the 1280px cap on THIS block's wrapper
+   so the band spans the section = viewport width. The sibling default-content
+   wrapper keeps its cap, so "Our Capabilities" stays centered/contained. Using
+   width:100% (not 100vw) avoids scrollbar-induced horizontal overflow. */
+main .section.dark-blue.widget-placeholder-container .widget-placeholder-wrapper {
+  max-width: none;
+  margin: 0;
+  padding: 0;
 }
 
 /* "Our Capabilities" heading lives in this section's trailing content; production
