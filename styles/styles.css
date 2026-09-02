@@ -382,6 +382,11 @@ main .section.light-blue-contact p {
   margin: 0 0 8px;
 }
 
+/* stack the org name above the street address (source joins them in one <p>) */
+main .section.light-blue-contact p strong {
+  display: block;
+}
+
 main .section.light-blue-contact a:any-link {
   display: inline-block;
   margin-top: 28px;
