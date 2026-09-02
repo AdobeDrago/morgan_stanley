@@ -241,19 +241,7 @@ header nav .nav-drop-label {
     border-bottom: 3px solid transparent;
   }
 
-  /* caret */
-  header nav .nav-drop > .nav-drop-label::after {
-    content: '';
-    width: 7px;
-    height: 7px;
-    border: 2px solid currentcolor;
-    border-width: 0 2px 2px 0;
-    transform: translateY(-2px) rotate(45deg);
-  }
-
-  header nav .nav-drop[aria-expanded='true'] > .nav-drop-label::after {
-    transform: translateY(2px) rotate(-135deg);
-  }
+  /* production shows no caret on the top-level items — just the active underline */
 
   /* teal active underline on the open item */
   header nav .nav-drop[aria-expanded='true'] > .nav-drop-label {
@@ -308,15 +296,11 @@ header nav .nav-drop-label {
     grid-template-columns: 1fr 420px;
   }
 
+  /* production stacks every dropdown link in a single column */
   header nav .nav-megamenu-links ul {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 4px 48px;
-  }
-
-  /* single-column link lists (Resources, About Us) stay one column */
-  header nav .nav-megamenu-links ul:has(> li:nth-child(-n+4):last-child) {
     grid-template-columns: 1fr;
+    gap: 0;
   }
 
   header nav .nav-megamenu-links li {
@@ -325,11 +309,11 @@ header nav .nav-drop-label {
 
   header nav .nav-megamenu-links a:any-link {
     display: block;
-    padding: 14px 8px;
-    color: #1a1a1a;
-    font-size: 18px;
+    padding: 12px 8px;
+    color: #000;
+    font-size: 16px;
+    font-weight: 500;
     line-height: 1.3;
-    border-bottom: 1px solid #ededed;
   }
 
   header nav .nav-megamenu-links a:hover {
