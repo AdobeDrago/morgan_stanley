@@ -342,3 +342,23 @@ main .section.highlight {
   margin: 0;
   padding: 40px 0;
 }
+
+/* MS brand section bands (section-metadata style values) */
+main .section.dark-blue {
+  background-color: var(--ms-navy);
+  color: #fff;
+  margin: 0;
+  padding: 40px 0;
+}
+
+main .section.grey {
+  background-color: var(--ms-tile-gray);
+  margin: 0;
+  padding: 40px 0;
+}
+
+main .section.light-blue {
+  background-color: var(--ms-contact-blue);
+  margin: 0;
+  padding: 40px 0;
+}
