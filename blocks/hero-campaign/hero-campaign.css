@@ -11,6 +11,7 @@
 
 .hero-campaign {
   position: relative;
+  box-sizing: border-box; /* keep min-height the TOTAL panel height (match prod 666, not 666+padding) */
   display: flex;
   align-items: center;
   min-height: 420px;
@@ -68,6 +69,7 @@
 
 .hero-campaign h4 {
   margin: 24px 0;
+  max-width: 591px; /* prod caps the subhead so it wraps like the reference */
   color: #fff;
   font-size: 20px;
   font-weight: 400;
@@ -115,7 +117,10 @@ main .hero-campaign a.button:any-link:focus-visible {
     min-height: 666px;
   }
 
+  /* content inset matches production's fluid container (112px @1280 → 318px @1900) */
   .hero-campaign > div:last-child > div {
-    padding: 0 32px;
+    width: 82.5vw;
+    max-width: 1264px;
+    padding: 0;
   }
 }
