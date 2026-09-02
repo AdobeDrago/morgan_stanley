@@ -43,9 +43,17 @@ click-to-open mega-menu, replacing the aem.live boilerplate nav.
   mega-menu ON CLICK; single-open; outside-click and Escape close; teal active
   underline; every child link is a real navigating `<a>`.
 - **Per-menu**: Capabilities → navy "Crypto" featured card; Insights → purple
-  "The BEAT™" card + nested "Series" submenu; Products → static navy fund-card
-  placeholder (no live market data, per the widget-placeholder decision);
-  Resources / About Us → link lists.
+  "The BEAT™" card + nested "Series" submenu; Products → per-left-item
+  hover/focus sub-nav (see below); Resources / About Us → link lists.
+- **Products sub-nav**: each left category (Mutual Funds, ETFs & ETPs, Registered
+  Alternatives, SMA, Money Market Funds, Liquidity Funds, Variable Insurance,
+  Closed-End, Model Portfolios) swaps the right navy panel on hover/focus, with a
+  light-teal active-item highlight. Cards are hard-coded from production (a
+  maintained point-in-time snapshot in `PRODUCTS_DATA`, not live) across three
+  metric layouts: price (NAV/Market Price + up/down arrow), yield (7-Day Current
+  Yield, Subsidized/Unsubsidized %), assets (Fund Assets). Categories with no
+  production cards render an empty panel, matching live. Values will need manual
+  refresh over time.
 - **Link targets**: migrated EDS pages where they exist (equity, fixed-income,
   alternatives, solutions-and-multi-asset, crypto); others point at the
   production URL (flagged external). Verified at 1280px and 1900px.
