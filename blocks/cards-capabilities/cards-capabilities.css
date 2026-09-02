@@ -22,7 +22,9 @@
 }
 
 /* desktop: 3 columns (measured at 1900px; required at 1280 & 1900) */
-@media (width >= 900px) {
+/* production is 2-column at ~1280 and 3-column at ~1440+; switch at 1366 so 1280
+   stays 2-col (the 600px rule above) and 1900 is 3-col */
+@media (width >= 1366px) {
   .cards-capabilities > ul {
     grid-template-columns: repeat(3, 1fr);
   }

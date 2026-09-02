@@ -23,11 +23,20 @@ main .section.dark-blue.widget-placeholder-container > div {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  max-width: none;
-  margin: 0;
-  padding: 40px;
+
+  /* production renders this as a full-bleed navy band edge-to-edge (not a
+     contained card); break out of the section container, content centered to 1200 */
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  padding: 40px max(24px, calc((100% - 1200px) / 2));
   background-color: var(--ms-navy);
   color: #fff;
+}
+
+/* "Our Capabilities" heading lives in this section's trailing content; production
+   centers it (EDS default-content is left-aligned) */
+main .section.widget-placeholder-container .default-content-wrapper h2 {
+  text-align: center;
 }
 
 /* --- product search bar --- */
