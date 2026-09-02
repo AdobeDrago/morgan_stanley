@@ -327,7 +327,62 @@ function decoratePanel(li, label) {
     buildProductsPanels(li, list, panel, left);
   }
 
+  // Insights: 3-column layout — left (Insights, Series ›), middle (the Series
+  // child links, shown when Series is active), right (purple FEATURED card).
+  if (key === 'insights') {
+    // eslint-disable-next-line no-use-before-define
+    buildInsightsColumns(list, panel, left);
+  }
+
   li.append(panel);
+}
+
+/**
+ * Insights mega-menu: pull the nested "Series" list out into its own middle
+ * column. The left column keeps top-level items (Insights, Series ›); hovering
+ * "Series" shows the middle column of series links. The right FEATURED card is
+ * appended separately by decoratePanel.
+ * @param {Element} list the Insights nested <ul>
+ * @param {Element} panel the .nav-megamenu container
+ * @param {Element} left the .nav-megamenu-links wrapper
+ */
+function buildInsightsColumns(list, panel, left) {
+  const seriesLi = [...list.querySelectorAll(':scope > li')]
+    .find((li) => /^Series\b/i.test(li.textContent.trim()));
+  if (!seriesLi) return;
+
+  const seriesSub = seriesLi.querySelector(':scope > ul');
+  if (!seriesSub) return;
+
+  // Build the middle column from the Series children, then remove the nested
+  // list from the left so the left column shows only top-level items.
+  const mid = document.createElement('div');
+  mid.className = 'nav-insights-series';
+  const midList = seriesSub.cloneNode(true);
+  seriesSub.remove();
+  mid.append(midList);
+
+  // Mark left as the insights variant + add a caret affordance on "Series".
+  left.classList.add('nav-megamenu-links-insights');
+  seriesLi.classList.add('nav-insights-series-trigger', 'is-active');
+
+  // Insert the middle column between the left links and the featured card.
+  panel.append(mid);
+
+  // Hovering/focusing "Series" (or its middle column) keeps it active; hovering
+  // the plain "Insights" item hides the series column.
+  const items = [...list.querySelectorAll(':scope > li')];
+  const showSeries = (on) => {
+    seriesLi.classList.toggle('is-active', on);
+    mid.classList.toggle('is-active', on);
+  };
+  showSeries(true);
+  items.forEach((it) => {
+    const isSeries = it === seriesLi;
+    it.addEventListener('mouseenter', () => showSeries(isSeries));
+    it.querySelector('a, button')?.addEventListener('focus', () => showSeries(isSeries));
+  });
+  mid.addEventListener('mouseenter', () => showSeries(true));
 }
 
 /**

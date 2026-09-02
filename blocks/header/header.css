@@ -306,6 +306,67 @@ header nav .nav-drop-label {
     padding: 48px 0 64px;
   }
 
+  /* Insights: 3-column layout — left links | middle Series list | featured */
+  header nav .nav-drop[aria-expanded='true'] .nav-megamenu:has(.nav-insights-series) {
+    grid-template-columns: 280px 1fr min(32%, 520px);
+    column-gap: 48px;
+  }
+
+  header nav .nav-insights-series {
+    padding: 48px 0 64px;
+    display: none;
+  }
+
+  header nav .nav-insights-series.is-active {
+    display: block;
+  }
+
+  header nav .nav-insights-series ul {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  header nav .nav-insights-series a:any-link {
+    display: block;
+    padding: 14px 0;
+    color: #1a1a1a;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.3;
+  }
+
+  header nav .nav-insights-series a:hover {
+    color: var(--ms-teal);
+  }
+
+  /* left column: "Series" trigger gets a › caret + light-teal active highlight */
+  header nav .nav-megamenu-links-insights > ul > li {
+    position: relative;
+  }
+
+  header nav .nav-megamenu-links-insights > ul > li > a,
+  header nav .nav-insights-series-trigger {
+    display: block;
+    padding: 14px 24px 14px 0;
+  }
+
+  header nav .nav-insights-series-trigger.is-active {
+    background-color: rgb(0 133 125 / 12%);
+  }
+
+  header nav .nav-insights-series-trigger::after {
+    content: '›';
+    position: absolute;
+    right: 16px;
+    top: 12px;
+    font-size: 20px;
+    color: #1a1a1a;
+  }
+
   /* production stacks every dropdown link in a single column */
   header nav .nav-megamenu-links ul {
     display: grid;
