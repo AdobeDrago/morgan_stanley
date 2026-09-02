@@ -407,13 +407,34 @@ header nav .nav-drop-label {
     color: rgb(255 255 255 / 88%);
   }
 
-  /* Products: hard-coded fund quote cards, 2×2 grid on the navy panel */
-  header nav .nav-megamenu-funds {
+  /* Products: per-left-item swappable navy panels stacked in one cell */
+  header nav .nav-products-panels {
     display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  header nav .nav-products-panels > .nav-products-panel {
+    grid-area: 1 / 1; /* stack all panels; only .is-active is shown */
+    display: none;
+  }
+
+  header nav .nav-products-panels > .nav-products-panel.is-active {
+    display: grid;
+  }
+
+  /* Products: hard-coded fund quote cards, 2×2 grid on the navy panel */
+  header nav .nav-megamenu-funds,
+  header nav .nav-products-panel {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 40px 48px;
     align-content: start;
     padding: 48px;
+  }
+
+  /* active left item gets the light-teal highlight (full-bleed to panel edge) */
+  header nav .nav-megamenu-links-products li.is-active > a {
+    background-color: rgb(0 133 125 / 12%);
+    color: #1a1a1a;
   }
 
   header nav .nav-fund-card {
@@ -470,6 +491,28 @@ header nav .nav-drop-label {
 
   header nav .nav-fund-card:hover .nav-fund-name {
     text-decoration: underline;
+  }
+
+  /* yield cards: side-by-side Subsidized / Unsubsidized columns */
+  header nav .nav-fund-yields {
+    display: flex;
+    gap: 40px;
+  }
+
+  header nav .nav-fund-yield {
+    display: flex;
+    flex-direction: column;
+  }
+
+  header nav .nav-fund-yield-label {
+    font-size: 13px;
+    color: #d7e3ee;
+    margin-bottom: 4px;
+  }
+
+  header nav .nav-fund-yield-value {
+    font-size: 26px;
+    font-weight: 700;
   }
 
   /* --- tools (utility strip, right-aligned, above the bar via order) --- */

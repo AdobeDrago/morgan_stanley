@@ -107,6 +107,169 @@ function buildTrigger(li) {
 }
 
 /**
+ * Products fund data per left-menu category, captured from production
+ * (point-in-time snapshot, not live). `metric` selects the card layout:
+ *  - 'price'  : ticker, name, dateLabel, price, direction (up|down)
+ *  - 'yield'  : ticker, name, dateLabel, subsidized, unsubsidized
+ *  - 'assets' : ticker, name, dateLabel, assets
+ * Categories with no production cards are omitted (empty right panel).
+ */
+const PRODUCTS_DATA = {
+  'mutual-funds': {
+    metric: 'price',
+    href: '/im/en-us/individual-investor/products/mutual-funds.html',
+    cards: [
+      {
+        ticker: 'MELIX • Class I', name: 'Emerging Markets Leaders Portfolio', dateLabel: 'NAV as of 09/01/2026', price: '$18.23', direction: 'down',
+      },
+      {
+        ticker: 'MUOIX • Class I', name: 'US Core Portfolio', dateLabel: 'NAV as of 09/01/2026', price: '$36.31', direction: 'down',
+      },
+      {
+        ticker: 'USGDX • Class I', name: 'Long Duration Government Opportunities Fund', dateLabel: 'NAV as of 09/01/2026', price: '$6.48', direction: 'down',
+      },
+      {
+        ticker: 'MSFAX • Class I', name: 'Global Franchise Portfolio', dateLabel: 'NAV as of 09/01/2026', price: '$28.47', direction: 'down',
+      },
+    ],
+  },
+  'etfs-etps': {
+    metric: 'price',
+    href: '/im/en-us/individual-investor/products/etfs.html',
+    cards: [
+      {
+        ticker: 'MSBT', name: 'Morgan Stanley Bitcoin Trust', dateLabel: 'Market Price as of 09/01/2026', price: '$22.14', direction: 'down',
+      },
+      {
+        ticker: 'EVTR', name: 'Eaton Vance Total Return Bond ETF', dateLabel: 'Market Price as of 09/01/2026', price: '$49.76', direction: 'down',
+      },
+      {
+        ticker: 'EVSM', name: 'Eaton Vance Short Duration Municipal Income ETF', dateLabel: 'Market Price as of 09/01/2026', price: '$49.97', direction: 'down',
+      },
+      {
+        ticker: 'PAPI', name: 'Parametric Equity Premium Income ETF', dateLabel: 'Market Price as of 09/01/2026', price: '$27.79', direction: 'down',
+      },
+    ],
+  },
+  'registered-alternatives': {
+    metric: 'price',
+    href: '/im/en-us/individual-investor/products/registered-alternatives.html',
+    cards: [
+      {
+        ticker: 'Class I', name: 'North Haven Private Assets Fund', dateLabel: 'NAV as of 07/31/2026', price: '$24.32', direction: 'up',
+      },
+      { ticker: 'Class A', name: 'AIP Alternative Lending Fund A' },
+      { ticker: 'Class A', name: 'Alternative Investment Partners Absolute Return Fund STS' },
+    ],
+  },
+  'money-market-funds': {
+    metric: 'yield',
+    href: '/im/en-us/individual-investor/products/money-market-funds.html',
+    cards: [
+      {
+        ticker: 'MWMXX • Class WH', name: 'Money Market Portfolio', dateLabel: '7-Day Current Yield as of 09/01/2026', subsidized: '3.74', unsubsidized: '3.67',
+      },
+      {
+        ticker: 'TEWXX • Class WH', name: 'Tax-Exempt', dateLabel: '7-Day Current Yield as of 09/01/2026', subsidized: '2.24', unsubsidized: '2.11',
+      },
+      {
+        ticker: 'DWGXX • Class R', name: 'U.S. Government Money Market Trust', dateLabel: '7-Day Current Yield as of 09/01/2026', subsidized: '3.35', unsubsidized: '3.35',
+      },
+    ],
+  },
+  'liquidity-funds': {
+    metric: 'assets',
+    href: '/im/en-us/individual-investor/products/liquidity-funds.html',
+    cards: [
+      {
+        ticker: 'MVRXX • Class IN', name: 'Government', dateLabel: 'Fund Assets as of 09/01/2026', assets: '$215,287 MM',
+      },
+      {
+        ticker: 'MPFXX • Class IN', name: 'Prime', dateLabel: 'Fund Assets as of 09/01/2026', assets: '$14,688 MM',
+      },
+      {
+        ticker: 'MISXX • Class IN', name: 'Treasury', dateLabel: 'Fund Assets as of 09/01/2026', assets: '$39,328 MM',
+      },
+    ],
+  },
+};
+
+/** Render one fund card's inner HTML for the given metric type. */
+function fundCardHtml(card, metric, href) {
+  const head = `<span class="nav-fund-ticker">${card.ticker || ''}</span>
+    <span class="nav-fund-name">${card.name || ''}</span>`;
+  let body = '';
+  if (metric === 'price' && card.price) {
+    const isUp = card.direction === 'up';
+    body = `<span class="nav-fund-navdate">${card.dateLabel}</span>
+      <span class="nav-fund-nav">
+        <span class="nav-fund-arrow ${isUp ? 'is-up' : 'is-down'}" aria-hidden="true"></span>
+        <span class="nav-fund-price">${card.price}</span>
+      </span>`;
+  } else if (metric === 'yield' && card.subsidized) {
+    body = `<span class="nav-fund-navdate">${card.dateLabel}</span>
+      <span class="nav-fund-yields">
+        <span class="nav-fund-yield"><span class="nav-fund-yield-label">Subsidized (%)</span><span class="nav-fund-yield-value">${card.subsidized}</span></span>
+        <span class="nav-fund-yield"><span class="nav-fund-yield-label">Unsubsidized (%)</span><span class="nav-fund-yield-value">${card.unsubsidized}</span></span>
+      </span>`;
+  } else if (metric === 'assets' && card.assets) {
+    body = `<span class="nav-fund-navdate">${card.dateLabel}</span>
+      <span class="nav-fund-nav"><span class="nav-fund-price">${card.assets}</span></span>`;
+  }
+  return `<a class="nav-fund-card" href="${href}">${head}${body}</a>`;
+}
+
+/**
+ * Build the Products mega-menu: give each left <li> a data-panel key and render
+ * one right-side card panel per category; hovering/focusing a left item shows
+ * that panel. Only categories present in PRODUCTS_DATA get cards.
+ * @param {Element} li Products top-level item
+ * @param {Element} list its nested <ul> of category links
+ * @param {Element} panel the .nav-megamenu container
+ * @param {Element} left the .nav-megamenu-links wrapper
+ */
+function buildProductsPanels(li, list, panel, left) {
+  left.classList.add('nav-megamenu-links-selectable', 'nav-megamenu-links-products');
+
+  const panelsWrap = document.createElement('div');
+  panelsWrap.className = 'nav-products-panels';
+
+  const leftItems = [...list.querySelectorAll(':scope > li')];
+  leftItems.forEach((item, i) => {
+    const text = item.textContent.trim();
+    const slug = text.toLowerCase()
+      .replace(/&/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+    item.dataset.panel = slug;
+    if (i === 0) item.classList.add('is-active');
+
+    const data = PRODUCTS_DATA[slug];
+    const cardPanel = document.createElement('div');
+    cardPanel.className = 'nav-megamenu-featured nav-megamenu-featured-navy nav-products-panel';
+    cardPanel.dataset.panel = slug;
+    if (i === 0) cardPanel.classList.add('is-active');
+    if (data) {
+      cardPanel.classList.add(`nav-products-panel--${data.metric}`);
+      cardPanel.innerHTML = data.cards.map((c) => fundCardHtml(c, data.metric, data.href)).join('');
+    }
+    panelsWrap.append(cardPanel);
+
+    const activate = () => {
+      leftItems.forEach((it) => it.classList.toggle('is-active', it === item));
+      panelsWrap.querySelectorAll('.nav-products-panel').forEach((p) => {
+        p.classList.toggle('is-active', p.dataset.panel === slug);
+      });
+    };
+    item.addEventListener('mouseenter', activate);
+    // focusing the child link also activates (keyboard)
+    item.querySelector('a')?.addEventListener('focus', activate);
+  });
+
+  panel.append(panelsWrap);
+}
+
+/**
  * Decorate a top-level mega-menu panel: left link column + optional right
  * FEATURED promo card (mirrors production).
  * @param {Element} li top-level item
@@ -154,40 +317,14 @@ function decoratePanel(li, label) {
     panel.append(card);
   }
 
-  // Products: static navy panel with hard-coded fund quote cards (2×2 grid),
-  // mirroring production. Values are a maintained point-in-time snapshot, not
-  // live market data. direction: 'up' | 'down' controls the arrow.
+  // Products: each left item swaps the right panel on hover/focus. Per-category
+  // fund cards are hard-coded from production (a maintained point-in-time
+  // snapshot, not live data). Three metric variants: 'price' (NAV/Market Price
+  // + arrow), 'yield' (7-Day Current Yield, Subsidized/Unsubsidized %),
+  // 'assets' (Fund Assets). Categories with no production cards render empty.
   if (key === 'products') {
-    const funds = [
-      {
-        ticker: 'MELIX • Class I', name: 'Emerging Markets Leaders Portfolio', navDate: 'NAV as of 09/01/2026', price: '$18.23', direction: 'down', href: '/im/en-us/individual-investor/products/mutual-funds.html',
-      },
-      {
-        ticker: 'MUOIX • Class I', name: 'US Core Portfolio', navDate: 'NAV as of 09/01/2026', price: '$36.31', direction: 'down', href: '/im/en-us/individual-investor/products/mutual-funds.html',
-      },
-      {
-        ticker: 'USGDX • Class I', name: 'Long Duration Government Opportunities Fund', navDate: 'NAV as of 09/01/2026', price: '$6.48', direction: 'down', href: '/im/en-us/individual-investor/products/mutual-funds.html',
-      },
-      {
-        ticker: 'MSFAX • Class I', name: 'Global Franchise Portfolio', navDate: 'NAV as of 09/01/2026', price: '$28.47', direction: 'down', href: '/im/en-us/individual-investor/products/mutual-funds.html',
-      },
-    ];
-    const panelEl = document.createElement('div');
-    panelEl.className = 'nav-megamenu-featured nav-megamenu-featured-navy nav-megamenu-funds';
-    panelEl.innerHTML = funds.map((f) => {
-      const isUp = f.direction === 'up';
-      return `<a class="nav-fund-card" href="${f.href}">
-        <span class="nav-fund-ticker">${f.ticker}</span>
-        <span class="nav-fund-name">${f.name}</span>
-        <span class="nav-fund-navdate">${f.navDate}</span>
-        <span class="nav-fund-nav">
-          <span class="nav-fund-arrow ${isUp ? 'is-up' : 'is-down'}" aria-hidden="true"></span>
-          <span class="nav-fund-price">${f.price}</span>
-        </span>
-      </a>`;
-    }).join('');
-    panel.append(panelEl);
-    left.classList.add('nav-megamenu-links-selectable');
+    // eslint-disable-next-line no-use-before-define
+    buildProductsPanels(li, list, panel, left);
   }
 
   li.append(panel);
