@@ -1,3 +1,10 @@
+/*
+ * cards-platform — product-platform tiles. On capability pages (equity), these
+ * sit on the navy "dark-blue" band as pale-blue solid cards with a dark title
+ * and a corner arrow (production: tile bg rgb(217,241,251), title 32px/500,
+ * ~195px tall, 3 across). No leading icon/description.
+ */
+
 .cards-platform > ul {
   list-style: none;
   margin: 0;
@@ -10,7 +17,7 @@
 .cards-platform > ul > li {
   position: relative;
   min-height: 160px;
-  background-color: #eef4fb;
+  background-color: #d9f1fb;
 }
 
 .cards-platform .cards-platform-card-body {
@@ -24,4 +31,53 @@
 .cards-platform > ul > li img {
   width: 100%;
   object-fit: cover;
+}
+
+/* --- capability-page platform tiles on the dark-blue band --- */
+@media (width >= 900px) {
+  .section.dark-blue .cards-platform > ul {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+  }
+}
+
+.section.dark-blue .cards-platform > ul > li {
+  min-height: 195px;
+  background-color: #d9f1fb;
+}
+
+.section.dark-blue .cards-platform .cards-platform-card-body {
+  margin: 0;
+  padding: 24px 28px 56px;
+}
+
+.section.dark-blue .cards-platform h3 {
+  margin: 0;
+  font-family: var(--ms-brand-heading-font);
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 1.1;
+  color: #1a1a1a;
+}
+
+.section.dark-blue .cards-platform h3 a:any-link {
+  color: #1a1a1a;
+  text-decoration: none;
+}
+
+.section.dark-blue .cards-platform h3 a:hover {
+  color: var(--ms-primary-blue);
+}
+
+/* corner arrow, bottom-right (teal), matching the production tile affordance */
+.section.dark-blue .cards-platform > ul > li::after {
+  content: '';
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--ms-teal);
+  border-width: 2px 2px 0 0;
+  transform: rotate(45deg);
 }
