@@ -1,23 +1,28 @@
 /*
  * Morgan Stanley IM — Individual Investor footer.
- * Production is a light footer: brand/affiliate link rows, a block of small-print
- * legal disclosures, and an inline bottom link row. Four decorated sections
+ * Production is a NAVY footer: white MSIM logo + LinkedIn circle icon, two columns
+ * of affiliate links (external-link arrows), a block of small-print legal
+ * disclosures, and a bottom link row. Four decorated sections
  * (.footer > div > .section): [0] brand+LinkedIn, [1] affiliate links,
  * [2] disclosures, [3] bottom link list.
  */
 
+/* stylelint-disable no-descending-specificity */
+
 footer {
-  background-color: #f4f4f4;
-  color: #333;
+  background-color: var(--ms-navy);
+  color: #fff;
   font-family: var(--ms-brand-font);
-  border-top: 1px solid #e0e0e0;
 }
 
 footer .footer > div {
   box-sizing: border-box;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 40px 24px 32px;
+  padding: 48px 24px 32px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
 }
 
 footer .footer p {
@@ -25,7 +30,7 @@ footer .footer p {
 }
 
 footer .footer a:any-link {
-  color: var(--ms-primary-blue);
+  color: #fff;
   text-decoration: none;
 }
 
@@ -33,39 +38,81 @@ footer .footer a:hover {
   text-decoration: underline;
 }
 
-/* [0] brand row */
-footer .footer .section:nth-child(1) {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 8px 24px;
-  padding-bottom: 16px;
+/* [0] brand column — white MSIM logo + LinkedIn circle icon */
+footer .footer .section:nth-child(1) img {
+  display: block;
+  width: 200px;
+  height: auto;
+
+  /* logo art is black; render white on the navy footer */
+  filter: brightness(0) invert(1);
 }
 
-footer .footer .section:nth-child(1) strong {
-  color: var(--ms-primary-blue);
-  font-size: 20px;
+footer .footer .section:nth-child(1) p:last-child {
+  margin-top: 20px;
+}
+
+/* LinkedIn link -> circular icon button */
+footer .footer .section:nth-child(1) a[href*="linkedin"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgb(255 255 255 / 60%);
+  border-radius: 50%;
+
+  /* hide the "LinkedIn" text; show glyph via ::before */
+  font-size: 0;
+}
+
+footer .footer .section:nth-child(1) a[href*="linkedin"]::before {
+  content: 'in';
+  font-size: 16px;
   font-weight: 700;
+  font-style: italic;
+  color: #fff;
 }
 
-/* [1] affiliate link row — inline, separated */
+footer .footer .section:nth-child(1) a[href*="linkedin"]:hover {
+  background: rgb(255 255 255 / 12%);
+  text-decoration: none;
+}
+
+/* [1] affiliate links — columns with external-link arrows */
 footer .footer .section:nth-child(2) {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px 28px;
-  padding-top: 8px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 40px;
+  max-width: 520px;
   padding-bottom: 24px;
-  border-bottom: 1px solid #ddd;
   font-size: 15px;
-  font-weight: 500;
 }
 
-/* [2] disclosures — small print, muted, comfortable line-height */
+footer .footer .section:nth-child(2) a::after {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-left: 8px;
+  border: 1.5px solid currentcolor;
+  border-left: 0;
+  border-bottom: 0;
+
+  /* simple external-link glyph: a small square-ish arrow */
+  background:
+    linear-gradient(currentcolor, currentcolor) no-repeat 0 100% / 60% 1.5px,
+    linear-gradient(currentcolor, currentcolor) no-repeat 0 100% / 1.5px 60%;
+  transform: translateY(1px);
+}
+
+/* [2] disclosures — small print, muted */
 footer .footer .section:nth-child(3) {
-  padding-top: 24px;
-  color: #6a6a6a;
+  color: rgb(255 255 255 / 62%);
   font-size: 12px;
   line-height: 1.6;
+  border-top: 1px solid rgb(255 255 255 / 18%);
+  padding-top: 24px;
 }
 
 footer .footer .section:nth-child(3) p {
@@ -73,7 +120,7 @@ footer .footer .section:nth-child(3) p {
 }
 
 footer .footer .section:nth-child(3) a:any-link {
-  color: #6a6a6a;
+  color: rgb(255 255 255 / 82%);
   text-decoration: underline;
 }
 
@@ -85,7 +132,7 @@ footer .footer .section:nth-child(4) ul {
   margin: 0;
   padding: 20px 0 0;
   list-style: none;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid rgb(255 255 255 / 18%);
   font-size: 13px;
 }
 
@@ -95,6 +142,17 @@ footer .footer .section:nth-child(4) li {
 
 @media (width >= 900px) {
   footer .footer > div {
-    padding: 48px 40px 32px;
+    padding: 56px 40px 40px;
+    grid-template-columns: 260px 1fr;
+    grid-template-areas:
+      'brand affiliates'
+      'disclosures disclosures'
+      'bottom bottom';
+    column-gap: 64px;
   }
+
+  footer .footer .section:nth-child(1) { grid-area: brand; }
+  footer .footer .section:nth-child(2) { grid-area: affiliates; }
+  footer .footer .section:nth-child(3) { grid-area: disclosures; }
+  footer .footer .section:nth-child(4) { grid-area: bottom; }
 }

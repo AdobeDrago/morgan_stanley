@@ -362,3 +362,33 @@ main .section.light-blue {
   margin: 0;
   padding: 40px 0;
 }
+
+/* Contact Us band: centered content + solid blue button (matches production) */
+main .section.contact {
+  padding: 64px 0;
+  text-align: center;
+}
+
+main .section.contact h2 {
+  font-size: var(--heading-font-size-xxl);
+  margin: 0 0 32px;
+}
+
+main .section.contact p {
+  margin: 0 0 8px;
+}
+
+main .section.contact a:any-link {
+  display: inline-block;
+  margin-top: 28px;
+  padding: 14px 24px;
+  border-radius: 0;
+  background-color: var(--ms-primary-blue);
+  color: #fff;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+main .section.contact a:hover {
+  background-color: #004a8a;
+}
