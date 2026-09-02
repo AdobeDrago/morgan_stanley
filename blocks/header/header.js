@@ -145,8 +145,9 @@ function decoratePanel(li, label) {
     const card = document.createElement('a');
     card.className = `nav-megamenu-featured nav-megamenu-featured-${promo.variant}`;
     card.href = promo.href;
-    card.innerHTML = `${promo.img ? `<span class="nav-megamenu-featured-img"><img src="${promo.img}" alt="" loading="lazy"></span>` : ''}
-      <span class="nav-megamenu-featured-body">
+    card.innerHTML = `<span class="nav-megamenu-featured-body">
+        <span class="nav-megamenu-featured-eyebrow">FEATURED</span>
+        ${promo.img ? `<span class="nav-megamenu-featured-img"><img src="${promo.img}" alt="" loading="lazy"></span>` : ''}
         <span class="nav-megamenu-featured-title">${promo.title}</span>
         <span class="nav-megamenu-featured-text">${promo.body}</span>
       </span>`;
