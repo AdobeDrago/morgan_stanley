@@ -20,21 +20,27 @@ main .section.dark-blue.widget-placeholder-container > div {
 }
 
 .widget-placeholder {
-  box-sizing: border-box; /* width:100% must INCLUDE the centering padding, else it overflows */
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 24px;
-  width: 100%;
-  margin: 0;
-  padding: 40px max(24px, calc((100% - 1200px) / 2));
+
+  /* production: a CONTAINED navy card (same width/inset as the hero text —
+     ~min(82.5vw, 1264px), centered) that is pulled UP to OVERLAP the bottom of
+     the hero banner (~96px), rendered above it via z-index. */
+  width: 82.5vw;
+  max-width: 1264px;
+  margin: -96px auto 0;
+  padding: 40px;
+  position: relative;
+  z-index: 2;
   background-color: var(--ms-navy);
   color: #fff;
 }
 
-/* full-bleed navy band (production): cancel the 1280px cap on THIS block's wrapper
-   so the band spans the section = viewport width. The sibling default-content
-   wrapper keeps its cap, so "Our Capabilities" stays centered/contained. Using
-   width:100% (not 100vw) avoids scrollbar-induced horizontal overflow. */
+/* let the widget center on the viewport (its section otherwise caps + pads the
+   wrapper to 1280/24px, which would clip the 1264px card); the sibling
+   default-content wrapper keeps its cap so "Our Capabilities" stays contained. */
 main .section.dark-blue.widget-placeholder-container .widget-placeholder-wrapper {
   max-width: none;
   margin: 0;
