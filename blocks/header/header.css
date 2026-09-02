@@ -407,19 +407,69 @@ header nav .nav-drop-label {
     color: rgb(255 255 255 / 88%);
   }
 
-  /* Products static fund-card placeholder */
+  /* Products: hard-coded fund quote cards, 2×2 grid on the navy panel */
   header nav .nav-megamenu-funds {
-    gap: 16px;
-    justify-content: center;
-    padding: 24px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 40px 48px;
+    align-content: start;
+    padding: 48px;
   }
 
   header nav .nav-fund-card {
-    display: block;
-    height: 64px;
-    background: rgb(255 255 255 / 8%);
-    border: 1px solid rgb(255 255 255 / 20%);
-    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    padding-left: 20px;
+    border-left: 2px solid var(--ms-teal);
+    color: #fff;
+    text-decoration: none;
+  }
+
+  header nav .nav-fund-ticker {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #d7e3ee;
+    margin-bottom: 12px;
+  }
+
+  header nav .nav-fund-name {
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.25;
+    margin-bottom: 20px;
+  }
+
+  header nav .nav-fund-navdate {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  header nav .nav-fund-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  header nav .nav-fund-price {
+    font-size: 26px;
+    font-weight: 700;
+  }
+
+  header nav .nav-fund-arrow {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+  }
+
+  header nav .nav-fund-arrow.is-down { border-top: 8px solid #e8853b; }
+  header nav .nav-fund-arrow.is-up { border-bottom: 8px solid #4aa39a; }
+
+  header nav .nav-fund-card:hover .nav-fund-name {
+    text-decoration: underline;
   }
 
   /* --- tools (utility strip, right-aligned, above the bar via order) --- */

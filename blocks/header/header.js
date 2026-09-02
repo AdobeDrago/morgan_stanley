@@ -154,13 +154,39 @@ function decoratePanel(li, label) {
     panel.append(card);
   }
 
-  // Products: static, on-brand fund-card placeholder (no live market data).
+  // Products: static navy panel with hard-coded fund quote cards (2×2 grid),
+  // mirroring production. Values are a maintained point-in-time snapshot, not
+  // live market data. direction: 'up' | 'down' controls the arrow.
   if (key === 'products') {
-    const ph = document.createElement('div');
-    ph.className = 'nav-megamenu-featured nav-megamenu-featured-navy nav-megamenu-funds';
-    ph.setAttribute('aria-hidden', 'true');
-    ph.innerHTML = '<span class="nav-fund-card"></span><span class="nav-fund-card"></span><span class="nav-fund-card"></span>';
-    panel.append(ph);
+    const funds = [
+      {
+        ticker: 'MELIX • Class I', name: 'Emerging Markets Leaders Portfolio', navDate: 'NAV as of 09/01/2026', price: '$18.23', direction: 'down', href: '/im/en-us/individual-investor/products/mutual-funds.html',
+      },
+      {
+        ticker: 'MUOIX • Class I', name: 'US Core Portfolio', navDate: 'NAV as of 09/01/2026', price: '$36.31', direction: 'down', href: '/im/en-us/individual-investor/products/mutual-funds.html',
+      },
+      {
+        ticker: 'USGDX • Class I', name: 'Long Duration Government Opportunities Fund', navDate: 'NAV as of 09/01/2026', price: '$6.48', direction: 'down', href: '/im/en-us/individual-investor/products/mutual-funds.html',
+      },
+      {
+        ticker: 'MSFAX • Class I', name: 'Global Franchise Portfolio', navDate: 'NAV as of 09/01/2026', price: '$28.47', direction: 'down', href: '/im/en-us/individual-investor/products/mutual-funds.html',
+      },
+    ];
+    const panelEl = document.createElement('div');
+    panelEl.className = 'nav-megamenu-featured nav-megamenu-featured-navy nav-megamenu-funds';
+    panelEl.innerHTML = funds.map((f) => {
+      const isUp = f.direction === 'up';
+      return `<a class="nav-fund-card" href="${f.href}">
+        <span class="nav-fund-ticker">${f.ticker}</span>
+        <span class="nav-fund-name">${f.name}</span>
+        <span class="nav-fund-navdate">${f.navDate}</span>
+        <span class="nav-fund-nav">
+          <span class="nav-fund-arrow ${isUp ? 'is-up' : 'is-down'}" aria-hidden="true"></span>
+          <span class="nav-fund-price">${f.price}</span>
+        </span>
+      </a>`;
+    }).join('');
+    panel.append(panelEl);
     left.classList.add('nav-megamenu-links-selectable');
   }
 
