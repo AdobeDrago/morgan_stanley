@@ -363,22 +363,26 @@ main .section.light-blue {
   padding: 40px 0;
 }
 
-/* Contact Us band: centered content + solid blue button (matches production) */
-main .section.contact {
+/* Contact Us band: light-blue background, centered content + solid blue button
+ * (matches production). NB: a multi-word section style ("light-blue contact")
+ * is emitted by EDS as a single hyphenated class, hence `.light-blue-contact`. */
+main .section.light-blue-contact {
+  background-color: var(--ms-contact-blue);
+  margin: 0;
   padding: 64px 0;
   text-align: center;
 }
 
-main .section.contact h2 {
+main .section.light-blue-contact h2 {
   font-size: var(--heading-font-size-xxl);
   margin: 0 0 32px;
 }
 
-main .section.contact p {
+main .section.light-blue-contact p {
   margin: 0 0 8px;
 }
 
-main .section.contact a:any-link {
+main .section.light-blue-contact a:any-link {
   display: inline-block;
   margin-top: 28px;
   padding: 14px 24px;
@@ -389,6 +393,6 @@ main .section.contact a:any-link {
   text-decoration: none;
 }
 
-main .section.contact a:hover {
+main .section.light-blue-contact a:hover {
   background-color: #004a8a;
 }
