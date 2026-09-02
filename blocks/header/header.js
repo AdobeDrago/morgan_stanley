@@ -366,8 +366,11 @@ function buildInsightsColumns(list, panel, left) {
   left.classList.add('nav-megamenu-links-insights');
   seriesLi.classList.add('nav-insights-series-trigger', 'is-active');
 
-  // Insert the middle column between the left links and the featured card.
-  panel.append(mid);
+  // Insert the middle column BEFORE the featured card so column order is
+  // left links | series (middle) | featured (right), matching production.
+  const featuredCard = panel.querySelector('.nav-megamenu-featured');
+  if (featuredCard) panel.insertBefore(mid, featuredCard);
+  else panel.append(mid);
 
   // Hovering/focusing "Series" (or its middle column) keeps it active; hovering
   // the plain "Insights" item hides the series column.
