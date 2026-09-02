@@ -1,0 +1,50 @@
+/*
+ * cards-teams — "Our Equity Teams" list: linked team name + description rows,
+ * separated by hairlines (matches production's team table on a light section).
+ */
+
+.cards-teams ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cards-teams li {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px 48px;
+  padding: 28px 0;
+  border-top: 1px solid #e0e0e0;
+}
+
+.cards-teams li:last-child {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.cards-teams-name a:any-link {
+  color: var(--ms-primary-blue);
+  font-size: 22px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.cards-teams-name a:hover {
+  text-decoration: underline;
+}
+
+.cards-teams-desc {
+  color: #4a4a4a;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.cards-teams-desc p {
+  margin: 0;
+}
+
+@media (width >= 900px) {
+  .cards-teams li {
+    grid-template-columns: 320px 1fr;
+    align-items: start;
+  }
+}
