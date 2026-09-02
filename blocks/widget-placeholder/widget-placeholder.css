@@ -20,6 +20,7 @@ main .section.dark-blue.widget-placeholder-container > div {
 }
 
 .widget-placeholder {
+  box-sizing: border-box; /* width:100% must INCLUDE the centering padding, else it overflows */
   display: flex;
   flex-direction: column;
   gap: 24px;
