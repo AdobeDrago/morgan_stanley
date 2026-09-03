@@ -5,8 +5,12 @@
  *   .hero-capability > div (image: <picture>) + div (content: <h1>)
  */
 
+/* production caps the banner at 1536px and centres it (full-bleed up to ~1440,
+   inset with ~182px side margins at 1900); max-width + auto margins reproduce
+   both without any side padding */
 .hero-capability-container .hero-capability-wrapper {
-  max-width: unset;
+  max-width: 1536px;
+  margin: 0 auto;
   padding: 0;
 }
 
@@ -15,6 +19,22 @@
   display: flex;
   flex-direction: column;
   background-color: var(--ms-navy);
+}
+
+/* Per-capability brand panel colour (measured from production). Default is the
+   navy above; each capability page overrides it with its own brand colour, and
+   the two light panels flip the title text to black. New capability pages: add
+   a line here with the page's measured panel colour (and, if light, its slug to
+   the dark-text rule below). */
+.hero-capability--equity { background-color: #002b51; }
+.hero-capability--alternatives { background-color: #005aa4; }
+.hero-capability--crypto { background-color: #491d8b; }
+.hero-capability--fixed-income { background-color: #afc7d3; }
+.hero-capability--solutions-and-multi-asset { background-color: #bae6ff; }
+
+.hero-capability--fixed-income > div:last-child :is(h1, h2, h3, p),
+.hero-capability--solutions-and-multi-asset > div:last-child :is(h1, h2, h3, p) {
+  color: #000;
 }
 
 /* content (title) block */
