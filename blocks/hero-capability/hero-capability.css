@@ -71,6 +71,7 @@
   /* title column on the LEFT, image column on the RIGHT, regardless of the
      authored row order (image row is first, content row is last) */
   .hero-capability > div:last-child {
+    grid-row: 1;
     grid-column: 1;
     order: 0;
     padding: 56px 56px 72px;
@@ -78,6 +79,7 @@
   }
 
   .hero-capability > div:first-child {
+    grid-row: 1;
     grid-column: 2;
     order: 0;
     height: 100%;
