@@ -54,7 +54,7 @@
   color: #fff;
   font-family: var(--ms-brand-heading-font);
   font-size: 40px;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.05;
 }
 
@@ -91,20 +91,24 @@
 }
 
 @media (width >= 900px) {
+  /* production: left panel is exactly one-third, image two-thirds; banner 572px */
   .hero-capability {
     display: grid;
-    grid-template-columns: 37% 63%;
+    grid-template-columns: 1fr 2fr;
     align-items: stretch;
-    min-height: 560px;
+    min-height: 572px;
   }
 
   /* title column on the LEFT, image column on the RIGHT, regardless of the
-     authored row order (image row is first, content row is last) */
+     authored row order (image row is first, content row is last). Production
+     insets the title ~112px from the panel edge, vertically centres it, and the
+     narrow title column wraps "Fixed Income" onto two lines. */
   .hero-capability > div:last-child {
     grid-row: 1;
     grid-column: 1;
     order: 0;
-    padding: 56px 56px 72px;
+    justify-content: center;
+    padding: 48px 48px 32px 112px;
     min-height: 0;
   }
 
@@ -116,7 +120,13 @@
   }
 
   .hero-capability h1 {
+    /* production stacks multi-word capability titles (Fixed/Income,
+       Alternative/Investments) in the narrow panel; cap the title width so the
+       same wrap survives the narrower substitute heading font (roboto-condensed
+       renders ~20% tighter than production's ms-sans). Single words (Equity)
+       stay on one line. */
+    max-width: 300px;
     font-size: 64px;
-    line-height: 1;
+    line-height: 1.1;
   }
 }
