@@ -1,3 +1,10 @@
+/*
+ * hero-capability — split title banner (capability/campaign pages).
+ * Production: full-bleed row, left ~37% navy panel with a large white title
+ * (bottom-left), right ~63% photographic image. Decorated DOM:
+ *   .hero-capability > div (image: <picture>) + div (content: <h1>)
+ */
+
 .hero-capability-container .hero-capability-wrapper {
   max-width: unset;
   padding: 0;
@@ -5,43 +12,79 @@
 
 .hero-capability {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--ms-navy);
+}
+
+/* content (title) block */
+.hero-capability > div:last-child {
+  order: 1;
+  display: flex;
+  align-items: flex-end;
   padding: 40px 24px;
-  min-height: 300px;
+  min-height: 220px;
 }
 
 .hero-capability h1,
 .hero-capability h2,
-.hero-capability h3,
-.hero-capability h4,
-.hero-capability h5,
-.hero-capability h6,
-.hero-capability p {
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-  color: var(--background-color);
+.hero-capability h3 {
+  margin: 0;
+  color: #fff;
+  font-family: var(--ms-brand-heading-font);
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 1.05;
+}
+
+/* image block */
+.hero-capability > div:first-child {
+  order: 2;
+  line-height: 0;
+}
+
+.hero-capability picture,
+.hero-capability img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* no-image fallback: plain navy band with white title (keeps decorate() guard) */
+.hero-capability.no-image {
+  background-color: var(--ms-navy);
 }
 
 .hero-capability.no-image * {
-  color: var(--text-color);
-}
-
-.hero-capability picture {
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-  object-fit: cover;
-  box-sizing: border-box;
-}
-
-.hero-capability img {
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
+  color: #fff;
 }
 
 @media (width >= 900px) {
   .hero-capability {
-    padding: 40px 32px;
+    display: grid;
+    grid-template-columns: 37% 63%;
+    align-items: stretch;
+    min-height: 560px;
+  }
+
+  /* title column on the LEFT, image column on the RIGHT, regardless of the
+     authored row order (image row is first, content row is last) */
+  .hero-capability > div:last-child {
+    grid-column: 1;
+    order: 0;
+    padding: 56px 56px 72px;
+    min-height: 0;
+  }
+
+  .hero-capability > div:first-child {
+    grid-column: 2;
+    order: 0;
+    height: 100%;
+  }
+
+  .hero-capability h1 {
+    font-size: 64px;
+    line-height: 1;
   }
 }
