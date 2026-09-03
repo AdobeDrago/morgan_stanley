@@ -363,6 +363,23 @@ main .section.light-blue {
   padding: 40px 0;
 }
 
+/* Capability-template section titles (Overview, Key Differentiators, Our Equity
+   Platform, Featured Insights, Our Equity Teams): production renders these
+   default-content headings at 48px (EDS h2 default is 36px). Overview and
+   Featured Insights are centered; the rest stay left. */
+main .section.grey .default-content-wrapper h2,
+main .section.columns-numbered-container .default-content-wrapper h2,
+main .section.cards-platform-container .default-content-wrapper h2,
+main .section.cards-insights-container .default-content-wrapper h2,
+main .section.cards-teams-container .default-content-wrapper h2 {
+  font-size: 48px;
+}
+
+main .section.grey .default-content-wrapper h2,
+main .section.cards-insights-container .default-content-wrapper h2 {
+  text-align: center;
+}
+
 /* Contact Us band: light-blue background, centered content + solid blue button
  * (matches production). NB: a multi-word section style ("light-blue contact")
  * is emitted by EDS as a single hyphenated class, hence `.light-blue-contact`. */

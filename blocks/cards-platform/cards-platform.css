@@ -34,10 +34,17 @@
 }
 
 /* --- capability-page platform tiles on the dark-blue band --- */
+/* production: 2 columns at ~1280, 3 columns at ~1440+ */
 @media (width >= 900px) {
   .section.dark-blue .cards-platform > ul {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 24px;
+  }
+}
+
+@media (width >= 1366px) {
+  .section.dark-blue .cards-platform > ul {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -45,6 +52,11 @@
   min-height: 195px;
   background-color: #d9f1fb;
 }
+
+/* production alternates the tile colours: blue / lavender / cream (measured) */
+.section.dark-blue .cards-platform > ul > li:nth-child(3n+1) { background-color: #d9f1fb; }
+.section.dark-blue .cards-platform > ul > li:nth-child(3n+2) { background-color: #e8daff; }
+.section.dark-blue .cards-platform > ul > li:nth-child(3n+3) { background-color: #fcf4d6; }
 
 .section.dark-blue .cards-platform .cards-platform-card-body {
   margin: 0;
