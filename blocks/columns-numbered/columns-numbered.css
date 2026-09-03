@@ -3,6 +3,20 @@
   flex-direction: column;
 }
 
+/* production: the leading numeral is a large light figure with a short teal
+   underline (EDS rendered it as plain body-size text) */
+.columns-numbered > div > div > p:first-child {
+  display: inline-block;
+  margin: 0 0 24px;
+  padding-bottom: 10px;
+  border-bottom: 3px solid var(--ms-teal);
+  font-family: var(--ms-brand-heading-font);
+  font-size: 96px;
+  font-weight: 300;
+  line-height: 1;
+  color: #1a1a1a;
+}
+
 .columns-numbered img {
   width: 100%;
 }
