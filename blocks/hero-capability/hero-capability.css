@@ -1,3 +1,5 @@
+/* stylelint-disable no-descending-specificity */
+
 /*
  * hero-capability — split title banner (capability/campaign pages).
  * Production: full-bleed row, left ~37% navy panel with a large white title
@@ -70,7 +72,16 @@
 /* image block */
 .hero-capability > div:first-child {
   order: 2;
+  display: flex;
   line-height: 0;
+}
+
+/* stretch the (unclassed) image wrapper div so its picture/img can fill the
+   full cell height — otherwise the wrapper shrink-wraps the intrinsic image
+   height and leaves a navy gap below it */
+.hero-capability > div:first-child > * {
+  flex: 1;
+  min-width: 0;
 }
 
 .hero-capability picture,
