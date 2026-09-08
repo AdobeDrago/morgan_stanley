@@ -111,7 +111,8 @@ async function renderRelated(paths) {
 }
 
 export default function decorate(block) {
-  const title = getMetadata('title');
+  // The `title` metadata key becomes <title>/og:title, not a name="title" meta.
+  const title = getMetadata('og:title') || document.title;
   const series = getMetadata('series');
   const date = getMetadata('publication-date');
   // The special `image` metadata key emits as og:image; fall back to a plain `image` meta.

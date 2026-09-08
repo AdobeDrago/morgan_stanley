@@ -1,7 +1,8 @@
 import { createOptimizedPicture, getMetadata } from '../../scripts/aem.js';
 
 export default function decorate(block) {
-  const name = getMetadata('title');
+  // The `title` metadata key becomes <title>/og:title, not a name="title" meta.
+  const name = getMetadata('og:title') || document.title;
   const role = getMetadata('role');
   const team = getMetadata('team');
   // The special `image` metadata key emits as og:image; fall back to a plain `image` meta.
