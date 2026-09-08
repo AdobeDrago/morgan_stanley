@@ -27,6 +27,17 @@ main > .section.section-nav-container {
   padding: 0;
 }
 
+/* collapse the 40px gaps the default section margins leave AROUND the sticky
+   bar: the hero directly above and the first content section directly below
+   (otherwise a white band appears above/below the pinned bar) */
+main > .section:has(+ .section-nav-container) {
+  margin-bottom: 0;
+}
+
+main > .section.section-nav-container + .section {
+  margin-top: 0;
+}
+
 /* tabs spread across the full content width (production spaces them apart,
    not clustered in the centre) */
 .section-nav-tabs {
