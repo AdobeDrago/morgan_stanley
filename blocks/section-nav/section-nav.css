@@ -2,46 +2,56 @@
 
 /*
  * section-nav — sticky in-page tab strip. Production: full-width white bar that
- * sticks to the top on scroll, centered tab row, teal underline under the active
- * tab and a hairline teal rule along the bottom of the bar.
+ * sticks to the top of the viewport (just below the fixed site header) on
+ * scroll, tabs spread evenly across the width, a teal underline under the
+ * active tab and a hairline teal rule along the bottom of the bar.
  */
 
-/* full-bleed white bar, sticky under the site header */
-.section-nav-container .section-nav-wrapper {
-  max-width: unset;
-  padding: 0;
-}
-
-.section-nav-wrapper {
+/* The whole SECTION must stick — sticking only the inner wrapper lets the bar
+   scroll away once the section's own (short) box leaves the viewport. Pin the
+   section to the bottom of the fixed 64px header, full-bleed, no default
+   section margins/max-width. */
+main > .section.section-nav-container {
   position: sticky;
-  top: 0;
+  top: var(--nav-height, 64px);
   z-index: 40;
+  margin: 0;
   background-color: #fff;
   border-bottom: 1px solid var(--ms-teal, #43b02a);
   box-shadow: 0 1px 4px rgb(0 0 0 / 6%);
 }
 
+.section-nav-container .section-nav-wrapper {
+  max-width: unset;
+  margin: 0;
+  padding: 0;
+}
+
+/* tabs spread across the full content width (production spaces them apart,
+   not clustered in the centre) */
 .section-nav-tabs {
   display: flex;
-  gap: 8px;
-  justify-content: center;
-  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: stretch;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 40px;
 }
 
 .section-nav-tabs a {
   position: relative;
-  padding: 20px 24px;
+  padding: 22px 8px;
   color: #1a1a1a;
   font-family: var(--ms-brand-font, roboto), sans-serif;
-  font-size: 18px;
+  font-size: 20px;
+  font-weight: 400;
   line-height: 1.2;
+  text-align: center;
   text-decoration: none;
   white-space: nowrap;
   border-bottom: 3px solid transparent;
-  margin-bottom: -1px; /* overlap the wrapper hairline so the active underline sits on it */
+  margin-bottom: -1px; /* overlap the section hairline so the active underline sits on it */
+  transition: color 0.15s ease;
 }
 
 .section-nav-tabs a:hover {
@@ -49,16 +59,16 @@
 }
 
 .section-nav-tabs a.is-active {
-  font-weight: 500;
   border-bottom-color: var(--ms-teal, #43b02a);
 }
 
-@media (width <= 700px) {
+@media (width <= 900px) {
   .section-nav-tabs {
     justify-content: flex-start;
-    flex-wrap: nowrap;
+    gap: 4px;
     overflow-x: auto;
     padding: 0 16px;
+    -webkit-overflow-scrolling: touch;
   }
 
   .section-nav-tabs a {
