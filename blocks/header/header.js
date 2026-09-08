@@ -5,6 +5,30 @@ import { loadFragment } from '../fragment/fragment.js';
 const isDesktop = window.matchMedia('(min-width: 900px)');
 
 /**
+ * Search category tabs. `key` maps to the future query-index result buckets;
+ * counts stay (0) until the search is wired up.
+ */
+const SEARCH_TABS = [
+  { key: 'products', label: 'Products' },
+  { key: 'insights', label: 'Insights' },
+  { key: 'resources', label: 'Resources' },
+  { key: 'teams-people', label: 'Teams & People' },
+];
+
+/**
+ * Shared search state. The real search (backed by the site query-index) will
+ * set `query` and fill each `results` bucket, then call updateCounts() +
+ * renderResults(). Until then every bucket is empty and the UI shows the empty
+ * state — this is the shell, wiring only.
+ */
+const searchState = {
+  query: '',
+  results: {
+    products: [], insights: [], resources: [], 'teams-people': [],
+  },
+};
+
+/**
  * Collapse every open top-level mega-menu.
  * @param {Element} navSections the .nav-sections container
  * @param {Element} [except] optional item to leave open
@@ -388,6 +412,164 @@ function buildInsightsColumns(list, panel, left) {
   mid.addEventListener('mouseenter', () => showSeries(true));
 }
 
+/** Update each tab's (n) count from searchState. */
+function updateCounts(panel) {
+  SEARCH_TABS.forEach(({ key }) => {
+    const el = panel.querySelector(`.nav-search-tab-count[data-count="${key}"]`);
+    if (el) el.textContent = `(${(searchState.results[key] || []).length})`;
+  });
+}
+
+/** Total results across every category bucket. */
+function totalResults() {
+  return SEARCH_TABS.reduce((n, { key }) => n + (searchState.results[key]?.length || 0), 0);
+}
+
+/**
+ * Render the active tab's results, or the empty state. Expects each result as
+ * { title, date, category, type, href }; the future search fills
+ * searchState.results before calling this. When nothing matches across all
+ * buckets, show the centered "No results to display" state.
+ * @param {Element} panel the .nav-search-panel element
+ */
+function renderResults(panel) {
+  const results = panel.querySelector('.nav-search-results');
+  if (!totalResults()) {
+    results.innerHTML = '<p class="nav-search-empty">No results to display</p>';
+    return;
+  }
+  const activeKey = panel.querySelector('.nav-search-tab.is-active')?.dataset.tab;
+  const items = searchState.results[activeKey] || [];
+  results.innerHTML = items.map((item) => `<a class="nav-search-result" href="${item.href || '#'}">
+      <span class="nav-search-result-title">${item.title || ''}</span>
+      <span class="nav-search-result-date">${item.date || ''}</span>
+      <span class="nav-search-result-category">${item.category || ''}</span>
+      <span class="nav-search-result-type">${item.type || ''}</span>
+    </a>`).join('');
+}
+
+/**
+ * Build the expanding search panel beneath the main bar (UI shell only — no
+ * querying yet). The .nav-search button toggles it; typing reveals the CLEAR
+ * control, the category tabs, and the results region. To wire real search,
+ * populate searchState on input, then call updateCounts() + renderResults().
+ * @param {Element} nav the <nav> element
+ * @param {Element} navWrapper the fixed .nav-wrapper the panel drops beneath
+ */
+function decorateSearch(nav, navWrapper) {
+  const toggle = nav.querySelector('.nav-search');
+  if (!toggle) return;
+
+  const panel = document.createElement('div');
+  panel.className = 'nav-search-panel';
+  panel.hidden = true;
+  panel.innerHTML = `<div class="nav-search-inner">
+      <div class="nav-search-bar">
+        <span class="nav-search-bar-icon" aria-hidden="true"></span>
+        <input type="text" role="searchbox" class="nav-search-input" placeholder="Search"
+          aria-label="Search the site" autocomplete="off" enterkeyhint="search">
+        <button type="button" class="nav-search-clear" hidden>CLEAR</button>
+      </div>
+      <div class="nav-search-tabs" role="tablist" hidden>
+        ${SEARCH_TABS.map((t, i) => `<button type="button" role="tab" data-tab="${t.key}" aria-selected="${i === 0}" class="nav-search-tab${i === 0 ? ' is-active' : ''}">${t.label}<span class="nav-search-tab-count" data-count="${t.key}">(0)</span></button>`).join('')}
+      </div>
+      <div class="nav-search-results" hidden></div>
+    </div>`;
+  navWrapper.append(panel);
+
+  // Dark scrim over the page content while search is open. It sits beneath the
+  // header (z-index below .nav-wrapper) so the nav stays crisp and only the
+  // content below is dimmed; clicking it closes the panel.
+  const scrim = document.createElement('div');
+  scrim.className = 'nav-search-scrim';
+  scrim.hidden = true;
+  document.body.append(scrim);
+
+  const input = panel.querySelector('.nav-search-input');
+  const clearBtn = panel.querySelector('.nav-search-clear');
+  const tabs = panel.querySelector('.nav-search-tabs');
+  const results = panel.querySelector('.nav-search-results');
+  const tabButtons = [...panel.querySelectorAll('.nav-search-tab')];
+
+  // Reveal CLEAR + results once there is a query; tabs only appear when at
+  // least one category has matches (an all-empty query shows "No results").
+  const reflectQueryState = () => {
+    const hasQuery = searchState.query.length > 0;
+    clearBtn.hidden = !hasQuery;
+    results.hidden = !hasQuery;
+    if (hasQuery) {
+      // TODO: query the site index here and fill searchState.results.
+      updateCounts(panel);
+      renderResults(panel);
+    }
+    tabs.hidden = !hasQuery || !totalResults();
+  };
+
+  const openPanel = () => {
+    panel.hidden = false;
+    scrim.hidden = false;
+    toggle.classList.add('is-open');
+    toggle.setAttribute('aria-expanded', 'true');
+    toggle.setAttribute('aria-label', 'Close search');
+    closeAllSections(nav.querySelector('.nav-sections'));
+    input.focus();
+  };
+
+  const closePanel = () => {
+    panel.hidden = true;
+    scrim.hidden = true;
+    toggle.classList.remove('is-open');
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-label', 'Search');
+  };
+
+  scrim.addEventListener('click', () => closePanel());
+
+  toggle.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (panel.hidden) openPanel();
+    else closePanel();
+  });
+
+  input.addEventListener('input', () => {
+    searchState.query = input.value.trim();
+    reflectQueryState();
+  });
+
+  clearBtn.addEventListener('click', () => {
+    input.value = '';
+    searchState.query = '';
+    reflectQueryState();
+    input.focus();
+  });
+
+  // Tab switching (visual only until results are wired in).
+  tabButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      tabButtons.forEach((b) => {
+        const active = b === btn;
+        b.classList.toggle('is-active', active);
+        b.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+      renderResults(panel);
+    });
+  });
+
+  // Close on Escape (within the panel) and on outside click.
+  panel.addEventListener('keydown', (e) => {
+    if (e.code === 'Escape') {
+      closePanel();
+      toggle.focus();
+    }
+  });
+  document.addEventListener('click', (e) => {
+    if (!panel.hidden && !panel.contains(e.target) && !toggle.contains(e.target)) {
+      closePanel();
+    }
+  });
+}
+
 /**
  * loads and decorates the header, mainly the nav
  * @param {Element} block The header block element
@@ -458,12 +640,17 @@ export default async function decorate(block) {
   }
 
   // Search sits in the main bar (after Contact Us), not the utility strip.
+  // The button holds two glyphs (magnifier + X); decorateSearch() wires the
+  // toggle and builds the expanding panel.
   const navSectionsForSearch = nav.querySelector('.nav-sections');
   if (navSectionsForSearch) {
     const search = document.createElement('button');
     search.type = 'button';
     search.className = 'nav-search';
     search.setAttribute('aria-label', 'Search');
+    search.setAttribute('aria-expanded', 'false');
+    search.innerHTML = `<span class="nav-search-glyph nav-search-glyph-glass" aria-hidden="true"></span>
+      <span class="nav-search-glyph nav-search-glyph-close" aria-hidden="true"></span>`;
     navSectionsForSearch.append(search);
   }
 
@@ -486,5 +673,6 @@ export default async function decorate(block) {
   const navWrapper = document.createElement('div');
   navWrapper.className = 'nav-wrapper';
   navWrapper.append(nav);
+  decorateSearch(nav, navWrapper);
   block.append(navWrapper);
 }
