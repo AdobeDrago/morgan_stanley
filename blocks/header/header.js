@@ -436,10 +436,13 @@ export default async function decorate(block) {
     });
   }
 
-  // utility tools dropdowns (country selector, Account Access) + search
+  // utility tools dropdowns (country selector, Account Access)
   const navTools = nav.querySelector('.nav-tools');
   if (navTools) {
-    navTools.querySelectorAll(':scope .default-content-wrapper > ul > li').forEach((li) => {
+    const toolItems = navTools.querySelectorAll(':scope .default-content-wrapper > ul > li');
+    toolItems.forEach((li, i) => {
+      // first tool item is the country/region selector — flag its label
+      if (i === 0) li.classList.add('nav-tool-country');
       if (li.querySelector(':scope > ul')) {
         li.classList.add('nav-tool-drop');
         const trigger = buildTrigger(li);
@@ -452,12 +455,16 @@ export default async function decorate(block) {
         });
       }
     });
+  }
 
+  // Search sits in the main bar (after Contact Us), not the utility strip.
+  const navSectionsForSearch = nav.querySelector('.nav-sections');
+  if (navSectionsForSearch) {
     const search = document.createElement('button');
     search.type = 'button';
     search.className = 'nav-search';
     search.setAttribute('aria-label', 'Search');
-    navTools.append(search);
+    navSectionsForSearch.append(search);
   }
 
   // hamburger for mobile
