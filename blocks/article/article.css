@@ -93,15 +93,16 @@
   gap: 1.5rem;
 }
 
-.article-author-name {
+a.article-author-name:any-link {
   display: inline-block;
   color: #fff;
   font-weight: 700;
   text-decoration: underline;
 }
 
-.article-author-name:hover {
+a.article-author-name:hover {
   color: #fff;
+  text-decoration: underline;
 }
 
 .article-author-role {
