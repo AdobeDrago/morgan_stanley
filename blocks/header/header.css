@@ -237,7 +237,8 @@ header nav .nav-drop-label {
   }
 
   /* --- main menu bar --- */
-  header nav .nav-sections {
+  header nav .nav-sections,
+  header nav[aria-expanded='true'] .nav-sections {
     display: flex;
     visibility: visible;
     flex: 1 1 auto;
@@ -643,12 +644,16 @@ header nav .nav-drop-label {
     color: #333;
   }
 
-  /* USA flag before the country/region selector */
+  /* USA flag before the country/region selector (inline SVG for cross-browser parity) */
   header nav .nav-tools .nav-tool-country .nav-drop-label::before {
-    content: '🇺🇸';
+    content: '';
+    width: 22px;
+    height: 15px;
     margin-right: 8px;
-    font-size: 16px;
-    line-height: 1;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 7410 3900"><rect width="7410" height="3900" fill="%23b22234"/><g fill="%23fff"><rect y="300" width="7410" height="300"/><rect y="900" width="7410" height="300"/><rect y="1500" width="7410" height="300"/><rect y="2100" width="7410" height="300"/><rect y="2700" width="7410" height="300"/><rect y="3300" width="7410" height="300"/></g><rect width="2964" height="2100" fill="%233c3b6e"/></svg>');
+    background-size: cover;
+    background-repeat: no-repeat;
+    border: 1px solid rgb(0 0 0 / 10%);
   }
 
   header nav .nav-tools .nav-tool-drop { position: relative; }
