@@ -22,6 +22,22 @@ header .nav-wrapper {
   box-shadow: 0 1px 0 rgb(0 0 0 / 8%);
 }
 
+/*
+ * Article/author templates: keep the nav in normal flow and let the header
+ * reserve its real height. Visually identical on live (nav is --nav-height),
+ * but prevents the fixed nav from overlapping the article masthead in the DA
+ * edit canvas, where the migrated nav renders taller than --nav-height.
+ */
+body.article header .nav-wrapper,
+body.author header .nav-wrapper {
+  position: relative;
+}
+
+body.article header,
+body.author header {
+  height: auto;
+}
+
 header nav {
   box-sizing: border-box;
   display: grid;
