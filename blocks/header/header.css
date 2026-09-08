@@ -174,6 +174,23 @@ header nav .nav-sections .default-content-wrapper > ul > li {
   font-weight: 400;
 }
 
+/*
+ * ---- tools (utility strip) — mobile base ------------------------------
+ * On mobile the tools strip lives inside the hamburger menu: hidden while
+ * collapsed, revealed (with the sections) only when the nav is expanded.
+ * Desktop rules below (>=900px) restore it as the top utility strip.
+ */
+header nav .nav-tools {
+  grid-area: tools;
+  display: none;
+  visibility: hidden;
+}
+
+header nav[aria-expanded='true'] .nav-tools {
+  display: block;
+  visibility: visible;
+}
+
 /* trigger button that carries the label + active underline */
 header nav .nav-drop-label {
   margin: 0;
@@ -596,6 +613,7 @@ header nav .nav-drop-label {
   header nav .nav-tools {
     grid-area: tools;
     display: flex;
+    visibility: visible;
     align-items: center;
     justify-content: flex-end;
     gap: 20px;

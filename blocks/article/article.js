@@ -32,34 +32,40 @@ function humanize(path) {
     .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
+const MONTHS = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY',
+  'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
+
+// Format an ISO date (2026-09-01) as "01 SEPTEMBER 2026"; pass through on failure.
+function formatDate(iso) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso || '');
+  if (!m) return iso;
+  const [, y, mo, d] = m;
+  const month = MONTHS[Number(mo) - 1];
+  if (!month) return iso;
+  return `${d} ${month} ${y}`;
+}
+
+// Author byline (text only — name link + role), resolved from /authors.json.
 async function renderByline(paths) {
   const byline = document.createElement('div');
   byline.className = 'article-byline';
   const rows = await fetchIndex('/authors.json');
   paths.forEach((path) => {
     const row = findRow(rows, path);
+    const author = document.createElement('div');
+    author.className = 'article-author';
     const link = document.createElement('a');
-    link.className = 'article-author';
+    link.className = 'article-author-name';
     link.href = path;
-    if (row && row.image) {
-      const pic = createOptimizedPicture(row.image, row.title || '', false, [{ width: '80' }]);
-      pic.classList.add('article-author-photo');
-      link.append(pic);
-    }
-    const meta = document.createElement('span');
-    meta.className = 'article-author-meta';
-    const name = document.createElement('span');
-    name.className = 'article-author-name';
-    name.textContent = row && row.title ? row.title : humanize(path);
-    meta.append(name);
+    link.textContent = row && row.title ? row.title : humanize(path);
+    author.append(link);
     if (row && row.role) {
-      const role = document.createElement('span');
+      const role = document.createElement('p');
       role.className = 'article-author-role';
       role.textContent = row.role;
-      meta.append(role);
+      author.append(role);
     }
-    link.append(meta);
-    byline.append(link);
+    byline.append(author);
   });
   return byline;
 }
@@ -99,7 +105,7 @@ async function renderRelated(paths) {
     if (row && row['publication-date']) {
       const date = document.createElement('p');
       date.className = 'article-related-date';
-      date.textContent = row['publication-date'];
+      date.textContent = formatDate(row['publication-date']);
       body.append(date);
     }
     link.append(body);
@@ -120,37 +126,52 @@ export default function decorate(block) {
   const authors = splitPaths(getMetadata('authors'));
   const related = splitPaths(getMetadata('related'));
 
-  // Masthead (prepended, eager hero for LCP).
+  // Three-panel hero masthead. DOM order (media, text, authors) is the mobile
+  // stack; desktop reorders via grid-template-areas.
   const masthead = document.createElement('div');
   masthead.className = 'article-masthead';
+
+  // Media panel (eager hero for LCP).
   if (image) {
-    const pic = createOptimizedPicture(image, title, true);
-    pic.classList.add('article-hero');
-    masthead.append(pic);
+    const media = document.createElement('div');
+    media.className = 'article-hero-media';
+    media.append(createOptimizedPicture(image, title, true));
+    masthead.append(media);
   }
-  if (series) {
-    const eyebrow = document.createElement('p');
-    eyebrow.className = 'article-eyebrow';
-    eyebrow.textContent = series;
-    masthead.append(eyebrow);
-  }
+
+  // Text panel (navy): eyebrow, title, date.
+  const text = document.createElement('div');
+  text.className = 'article-hero-text';
+  const eyebrow = document.createElement('p');
+  eyebrow.className = 'article-eyebrow';
+  eyebrow.textContent = series ? `${series} | Insights` : 'Insights';
+  text.append(eyebrow);
   if (title) {
     const h1 = document.createElement('h1');
     h1.textContent = title;
-    masthead.append(h1);
+    text.append(h1);
   }
   if (date) {
     const dateEl = document.createElement('p');
     dateEl.className = 'article-date';
-    dateEl.textContent = date;
-    masthead.append(dateEl);
+    dateEl.textContent = formatDate(date);
+    text.append(dateEl);
   }
-  block.prepend(masthead);
+  masthead.append(text);
 
-  // Byline — inserted after masthead once the authors index resolves.
+  // Authors panel (blue): heading + byline.
   if (authors.length) {
-    renderByline(authors).then((byline) => masthead.append(byline));
+    const authorsPanel = document.createElement('div');
+    authorsPanel.className = 'article-hero-authors';
+    const authorsHeading = document.createElement('p');
+    authorsHeading.className = 'article-authors-heading';
+    authorsHeading.textContent = 'The Authors';
+    authorsPanel.append(authorsHeading);
+    masthead.append(authorsPanel);
+    renderByline(authors).then((byline) => authorsPanel.append(byline));
   }
+
+  block.prepend(masthead);
 
   // Related Insights — appended once the insights index resolves.
   if (related.length) {
