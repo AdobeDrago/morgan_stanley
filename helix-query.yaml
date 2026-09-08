@@ -1,0 +1,82 @@
+version: 1
+
+indices:
+  # One row per article, under /insights/. Powers Related Insights cards and
+  # any insights listing. Consumed by the article block via /insights.json.
+  insights:
+    include:
+      - /insights/**
+    exclude:
+      - /insights/**/media/**
+    target: /insights.json
+    properties:
+      title:
+        select: head > meta[property="og:title"]
+        value: |
+          attribute(el, "content")
+      description:
+        select: head > meta[name="description"]
+        value: |
+          attribute(el, "content")
+      series:
+        select: head > meta[name="series"]
+        value: |
+          attribute(el, "content")
+      publication-date:
+        select: head > meta[name="publication-date"]
+        value: |
+          attribute(el, "content")
+      image:
+        select: head > meta[property="og:image"]
+        value: |
+          attribute(el, "content")
+      authors:
+        select: head > meta[name="authors"]
+        value: |
+          attribute(el, "content")
+      template:
+        select: head > meta[name="template"]
+        value: |
+          attribute(el, "content")
+      lastModified:
+        select: none
+        value: |
+          parseTimestamp(headers['last-modified'], 'ddd, DD MMM YYYY hh:mm:ss GMT')
+
+  # One row per author, under /authors/. Powers the article byline (name/role)
+  # and any author listing. Consumed by the article block via /authors.json.
+  authors:
+    include:
+      - /authors/**
+    exclude:
+      - /authors/media/**
+    target: /authors.json
+    properties:
+      title:
+        select: head > meta[property="og:title"]
+        value: |
+          attribute(el, "content")
+      role:
+        select: head > meta[name="role"]
+        value: |
+          attribute(el, "content")
+      team:
+        select: head > meta[name="team"]
+        value: |
+          attribute(el, "content")
+      description:
+        select: head > meta[name="description"]
+        value: |
+          attribute(el, "content")
+      image:
+        select: head > meta[property="og:image"]
+        value: |
+          attribute(el, "content")
+      template:
+        select: head > meta[name="template"]
+        value: |
+          attribute(el, "content")
+      lastModified:
+        select: none
+        value: |
+          parseTimestamp(headers['last-modified'], 'ddd, DD MMM YYYY hh:mm:ss GMT')
