@@ -1,0 +1,126 @@
+/* hero-campaign: full-bleed campaign banner
+ * Production ref: morganstanley.com/im hero panel.
+ * Blue base (--ms-primary-blue) with the crypto image covering the panel and
+ * heading/subhead/CTA overlaid on the left. */
+
+/* full-bleed: cancel the section container max-width so the panel spans the viewport */
+.hero-campaign-container .hero-campaign-wrapper {
+  max-width: unset;
+  padding: 0;
+}
+
+.hero-campaign {
+  position: relative;
+  box-sizing: border-box; /* keep min-height the TOTAL panel height (match prod 666, not 666+padding) */
+  display: flex;
+  align-items: center;
+  min-height: 420px;
+  padding: 48px 0 32px;
+  overflow: hidden;
+  background-color: var(--ms-primary-blue);
+}
+
+/* picture/img fill their wrapper (kept first: lowest specificity) */
+.hero-campaign picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-campaign img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* image row -> absolutely fills the panel behind the content */
+.hero-campaign > div:first-child {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  margin: 0;
+}
+
+/* content row -> sits above the image, constrained to the site content width */
+.hero-campaign > div:last-child {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+.hero-campaign > div:first-child > div {
+  height: 100%;
+}
+
+.hero-campaign > div:last-child > div {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.hero-campaign h1 {
+  margin: 0 0 16px;
+  color: #fff;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 44px;
+}
+
+.hero-campaign h4 {
+  margin: 24px 0;
+  max-width: 591px; /* prod caps the subhead so it wraps like the reference */
+  color: #fff;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 30px;
+}
+
+.hero-campaign p {
+  margin: 24px 0 0;
+}
+
+/* CTA: transparent square-cornered outline button.
+ * Overrides the global a.button styling (rounded, filled) with matching specificity. */
+main .hero-campaign a:any-link,
+main .hero-campaign a.button:any-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  border: 1px solid #fff;
+  border-radius: 0;
+  padding: 15px 20px;
+  background-color: transparent;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 30px;
+  text-decoration: none;
+}
+
+main .hero-campaign a:any-link:hover,
+main .hero-campaign a:any-link:focus-visible,
+main .hero-campaign a.button:any-link:hover,
+main .hero-campaign a.button:any-link:focus-visible {
+  background-color: #fff;
+  color: var(--ms-primary-blue);
+}
+
+/* no image authored -> keep the blue base panel, white text still reads */
+.hero-campaign.no-image {
+  min-height: 0;
+}
+
+@media (width >= 900px) {
+  .hero-campaign {
+    min-height: 666px;
+  }
+
+  /* content inset matches production's fluid container (112px @1280 → 318px @1900) */
+  .hero-campaign > div:last-child > div {
+    width: 82.5vw;
+    max-width: 1264px;
+    padding: 0;
+  }
+}

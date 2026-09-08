@@ -1,0 +1,199 @@
+/*
+ * widget-placeholder — on-brand product-search bar + hard-coded fund quote cards.
+ * Production renders this as a CENTERED, contained navy card (page margins on
+ * both sides), not a full-bleed band. So for the widget's section we cancel the
+ * full-bleed `dark-blue` band and paint the navy on the widget box itself.
+ * (Higher specificity than styles.css `main .section.dark-blue`, and scoped to
+ * the widget container so the full-bleed FEATURED band is unaffected.)
+ */
+main .section.dark-blue.widget-placeholder-container {
+  background-color: transparent;
+  color: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+main .section.dark-blue.widget-placeholder-container > div {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.widget-placeholder {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  /* production: a CONTAINED navy card (same width/inset as the hero text —
+     ~min(82.5vw, 1264px), centered) that is pulled UP to OVERLAP the bottom of
+     the hero banner (~96px), rendered above it via z-index. */
+  width: 82.5vw;
+  max-width: 1264px;
+  margin: -136px auto 0; /* nets ~96px overlap onto the hero (40px section gap absorbed) */
+  padding: 40px;
+  position: relative;
+  z-index: 2;
+  background-color: var(--ms-navy);
+  color: #fff;
+}
+
+/* let the widget center on the viewport (its section otherwise caps + pads the
+   wrapper to 1280/24px, which would clip the 1264px card); the sibling
+   default-content wrapper keeps its cap so "Our Capabilities" stays contained. */
+main .section.dark-blue.widget-placeholder-container .widget-placeholder-wrapper {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* "Our Capabilities" heading lives in this section's trailing content; production
+   centers it (EDS default-content is left-aligned) */
+main .section.widget-placeholder-container .default-content-wrapper h2 {
+  text-align: center;
+}
+
+/* --- product search bar --- */
+.widget-placeholder-search {
+  display: flex;
+  align-items: stretch;
+}
+
+.widget-placeholder-label {
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  color: #fff;
+  font-weight: 400;
+  font-size: 20px;
+  white-space: nowrap;
+}
+
+.widget-placeholder-field {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: space-between;
+  background: #dbeaf5;
+  padding: 0;
+}
+
+.widget-placeholder-input {
+  padding: 0 20px;
+  color: #5a6b7a;
+  font-size: 20px;
+}
+
+.widget-placeholder-search-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  align-self: stretch;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  padding: 18px 0;
+  background: #00857d;
+  cursor: pointer;
+}
+
+.widget-placeholder-icon {
+  width: 20px;
+  height: 20px;
+  border: 2.5px solid #fff;
+  border-radius: 50%;
+  position: relative;
+}
+
+.widget-placeholder-icon::after {
+  content: '';
+  position: absolute;
+  width: 2.5px;
+  height: 9px;
+  background: #fff;
+  transform: rotate(-45deg);
+  right: -4px;
+  bottom: -6px;
+}
+
+/* --- fund quote cards --- */
+.widget-placeholder-funds {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+.widget-placeholder-fund {
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+}
+
+.widget-placeholder-fund-ticker {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #d7e3ee;
+  margin-bottom: 10px;
+}
+
+.widget-placeholder-fund-name {
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.25;
+  margin-bottom: 18px;
+}
+
+.widget-placeholder-fund-navdate {
+  margin-top: auto; /* pin NAV date + price to the card bottom so they align across
+                       cards regardless of fund-name line count (matches production) */
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.widget-placeholder-fund-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.widget-placeholder-fund-price {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.widget-placeholder-fund-arrow {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+}
+
+.widget-placeholder-fund-arrow.is-down {
+  border-top: 8px solid #e8853b;
+}
+
+.widget-placeholder-fund-arrow.is-up {
+  border-bottom: 8px solid #4aa39a;
+}
+
+@media (width >= 900px) {
+  .widget-placeholder-funds {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+
+  /* divider rules between the three cards, matching production */
+  .widget-placeholder-fund {
+    padding: 0 40px;
+    border-left: 1px solid rgb(255 255 255 / 18%);
+  }
+
+  .widget-placeholder-fund:first-child {
+    padding-left: 0;
+    border-left: 0;
+  }
+}

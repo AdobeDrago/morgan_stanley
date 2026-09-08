@@ -1,0 +1,39 @@
+{
+  "variantName": "cards-explore",
+  "baseBlock": "cards",
+  "version": "1.0.0",
+  "created": "2026-08-31T00:00:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.morganstanley.com/im/en-us/individual-investor/campaigns/liquidity",
+    "originPage": "Global Liquidity campaign landing page",
+    "blockPosition": "bottom"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "colored",
+    "density": "compact",
+    "purpose": "explore-more-tiles",
+    "imagePattern": "noimg"
+  },
+  "contentPattern": {
+    "structure": "solid colored tile + title + description paragraph + arrow link",
+    "buttonCount": 1,
+    "imageCount": 0
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "'Explore More'-style colored navigation tiles with a title, a short description, and an arrow link",
+      "linked promo tiles on solid color backgrounds with body copy (no icon, no image)",
+      "cross-sell / related-offering tile rows"
+    ],
+    "notSuitableFor": [
+      "tiles with icons (use cards-capabilities)",
+      "tiles with only a title and arrow and no description (use cards-platform)",
+      "article/insight cards with photographic thumbnails, category tags, and dates (use cards-insights)"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/im/en-us/individual-investor/campaigns/liquidity"],
+    "reuseCount": 1,
+    "lastUsed": "2026-08-31T00:00:00.000Z"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "variantName": "columns-numbered",
+  "baseBlock": "columns",
+  "version": "1.0.0",
+  "created": "2026-08-31",
+  "sourceContext": {
+    "originUrl": "https://www.morganstanley.com/im/en-us/individual-investor/capabilities/fixed-income.html",
+    "originPage": "Fixed Income capability detail page",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "spacious",
+    "purpose": "key-differentiators",
+    "imagePattern": "noimg"
+  },
+  "contentPattern": {
+    "structure": "3 balanced text columns, each: large numeral + subheading + short bullet list",
+    "buttonCount": 0,
+    "imageCount": 0
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "3-up balanced text columns (differentiators, pillars, steps)",
+      "numbered/labelled feature lists in side-by-side columns",
+      "image-free informational column layouts on a light background"
+    ],
+    "notSuitableFor": [
+      "dark 2-column graphic + copy + CTA promo bands (use columns-featured)",
+      "repeating card grids with images (use a cards variant)"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/im/en-us/individual-investor/capabilities/fixed-income"],
+    "reuseCount": 1,
+    "lastUsed": "2026-08-31"
+  }
+}

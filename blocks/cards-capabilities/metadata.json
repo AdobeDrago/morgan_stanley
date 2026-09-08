@@ -1,0 +1,38 @@
+{
+  "variantName": "cards-capabilities",
+  "baseBlock": "cards",
+  "version": "1.0.0",
+  "created": "2026-08-31",
+  "sourceContext": {
+    "originUrl": "https://www.morganstanley.com/im/en-us/individual-investor.html",
+    "originPage": "Individual Investor landing page",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "colored",
+    "density": "compact",
+    "purpose": "capabilities-grid",
+    "imagePattern": "icon"
+  },
+  "contentPattern": {
+    "structure": "icon + title + one-line description + arrow CTA per tile",
+    "buttonCount": 1,
+    "imageCount": 1
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "capability/category navigation grids",
+      "colored tile grids with icon + short label + link",
+      "product-family or offering overviews"
+    ],
+    "notSuitableFor": [
+      "article/news card grids with photographic thumbnails and dates",
+      "long-form descriptive cards"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/im/en-us/individual-investor"],
+    "reuseCount": 1,
+    "lastUsed": "2026-08-31"
+  }
+}

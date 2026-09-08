@@ -1,0 +1,144 @@
+/* stylelint-disable no-descending-specificity */
+/* stylelint-disable selector-class-pattern -- BEM `--` modifier per capability slug */
+
+/*
+ * hero-capability — split title banner (capability/campaign pages).
+ * Production: full-bleed row, left ~37% navy panel with a large white title
+ * (bottom-left), right ~63% photographic image. Decorated DOM:
+ *   .hero-capability > div (image: <picture>) + div (content: <h1>)
+ */
+
+/* production caps the banner at 1536px and centres it (full-bleed up to ~1440,
+   inset with ~182px side margins at 1900); max-width + auto margins reproduce
+   both without any side padding */
+.hero-capability-container .hero-capability-wrapper {
+  max-width: 1536px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.hero-capability {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--ms-navy);
+}
+
+/* Per-capability brand panel colour (measured from production). Default is the
+   navy above; each capability page overrides it with its own brand colour, and
+   the two light panels flip the title text to black. New capability pages: add
+   a line here with the page's measured panel colour (and, if light, its slug to
+   the dark-text rule below). */
+.hero-capability--equity { background-color: #002b51; }
+.hero-capability--alternatives { background-color: #005aa4; }
+.hero-capability--crypto { background-color: #491d8b; }
+.hero-capability--fixed-income { background-color: #afc7d3; }
+.hero-capability--solutions-and-multi-asset { background-color: #bae6ff; }
+
+.hero-capability--fixed-income > div:last-child :is(h1, h2, h3, p),
+.hero-capability--solutions-and-multi-asset > div:last-child :is(h1, h2, h3, p) {
+  color: #000;
+}
+
+/* content (title) block */
+.hero-capability > div:last-child {
+  order: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 40px 24px;
+  min-height: 220px;
+}
+
+.hero-capability h1,
+.hero-capability h2,
+.hero-capability h3 {
+  margin: 0;
+  color: #fff;
+  font-family: var(--ms-brand-heading-font);
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+/* optional subtitle paragraph under the title (e.g. Global Liquidity) */
+.hero-capability > div:last-child p {
+  margin: 16px 0 0;
+  max-width: 44ch;
+  color: #fff;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+/* image block */
+.hero-capability > div:first-child {
+  order: 2;
+  display: flex;
+  line-height: 0;
+}
+
+/* stretch the (unclassed) image wrapper div so its picture/img can fill the
+   full cell height — otherwise the wrapper shrink-wraps the intrinsic image
+   height and leaves a navy gap below it */
+.hero-capability > div:first-child > * {
+  flex: 1;
+  min-width: 0;
+}
+
+.hero-capability picture,
+.hero-capability img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* no-image fallback: plain navy band with white title (keeps decorate() guard) */
+.hero-capability.no-image {
+  background-color: var(--ms-navy);
+}
+
+.hero-capability.no-image * {
+  color: #fff;
+}
+
+@media (width >= 900px) {
+  /* production: left panel is exactly one-third, image two-thirds; banner 572px */
+  .hero-capability {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    align-items: stretch;
+    min-height: 572px;
+  }
+
+  /* title column on the LEFT, image column on the RIGHT, regardless of the
+     authored row order (image row is first, content row is last). Production
+     insets the title ~112px from the panel edge, vertically centres it, and the
+     narrow title column wraps "Fixed Income" onto two lines. */
+  .hero-capability > div:last-child {
+    grid-row: 1;
+    grid-column: 1;
+    order: 0;
+    justify-content: center;
+    padding: 48px 48px 32px 112px;
+    min-height: 0;
+  }
+
+  .hero-capability > div:first-child {
+    grid-row: 1;
+    grid-column: 2;
+    order: 0;
+    height: 100%;
+  }
+
+  .hero-capability h1 {
+    /* production stacks multi-word capability titles (Fixed/Income,
+       Alternative/Investments) in the narrow panel; cap the title width so the
+       same wrap survives the narrower substitute heading font (roboto-condensed
+       renders ~20% tighter than production's ms-sans). Single words (Equity)
+       stay on one line. */
+    max-width: 300px;
+    font-size: 64px;
+    line-height: 1.1;
+  }
+}

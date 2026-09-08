@@ -1,0 +1,38 @@
+{
+  "variantName": "hero-campaign",
+  "baseBlock": "hero",
+  "version": "1.0.0",
+  "created": "2026-08-31",
+  "sourceContext": {
+    "originUrl": "https://www.morganstanley.com/im/en-us/individual-investor.html",
+    "originPage": "Individual Investor landing page",
+    "blockPosition": "top"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "dark",
+    "density": "spacious",
+    "purpose": "campaign-hero",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "background image + heading + subheading + 1 CTA",
+    "buttonCount": 1,
+    "imageCount": 1
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "campaign landing banners",
+      "full-width hero banners with a background photo and single CTA",
+      "product/capability landing page tops"
+    ],
+    "notSuitableFor": [
+      "text-only intros with no background image",
+      "multi-CTA marketing headers"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/im/en-us/individual-investor"],
+    "reuseCount": 1,
+    "lastUsed": "2026-08-31"
+  }
+}

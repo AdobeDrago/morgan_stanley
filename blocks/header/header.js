@@ -4,108 +4,388 @@ import { loadFragment } from '../fragment/fragment.js';
 // media query match that indicates mobile/tablet width
 const isDesktop = window.matchMedia('(min-width: 900px)');
 
-function closeOnEscape(e) {
-  if (e.code === 'Escape') {
-    const nav = document.getElementById('nav');
-    const navSections = nav.querySelector('.nav-sections');
-    if (!navSections) return;
-    const navSectionExpanded = navSections.querySelector('[aria-expanded="true"]');
-    if (navSectionExpanded && isDesktop.matches) {
-      // eslint-disable-next-line no-use-before-define
-      toggleAllNavSections(navSections);
-      navSectionExpanded.focus();
-    } else if (!isDesktop.matches) {
-      // eslint-disable-next-line no-use-before-define
-      toggleMenu(nav, navSections);
-      nav.querySelector('button').focus();
-    }
-  }
-}
-
-function closeOnFocusLost(e) {
-  const nav = e.currentTarget;
-  if (!nav.contains(e.relatedTarget)) {
-    const navSections = nav.querySelector('.nav-sections');
-    if (!navSections) return;
-    const navSectionExpanded = navSections.querySelector('[aria-expanded="true"]');
-    if (navSectionExpanded && isDesktop.matches) {
-      // eslint-disable-next-line no-use-before-define
-      toggleAllNavSections(navSections, false);
-    } else if (!isDesktop.matches) {
-      // eslint-disable-next-line no-use-before-define
-      toggleMenu(nav, navSections, false);
-    }
-  }
-}
-
-function openOnKeydown(e) {
-  const focused = document.activeElement;
-  const isNavDrop = focused.className === 'nav-drop';
-  if (isNavDrop && (e.code === 'Enter' || e.code === 'Space')) {
-    const dropExpanded = focused.getAttribute('aria-expanded') === 'true';
-    // eslint-disable-next-line no-use-before-define
-    toggleAllNavSections(focused.closest('.nav-sections'));
-    focused.setAttribute('aria-expanded', dropExpanded ? 'false' : 'true');
-  }
-}
-
-function focusNavSection() {
-  document.activeElement.addEventListener('keydown', openOnKeydown);
-}
-
 /**
- * Toggles all nav sections
- * @param {Element} sections The container element
- * @param {Boolean} expanded Whether the element should be expanded or collapsed
+ * Collapse every open top-level mega-menu.
+ * @param {Element} navSections the .nav-sections container
+ * @param {Element} [except] optional item to leave open
  */
-function toggleAllNavSections(sections, expanded = false) {
-  if (!sections) return;
-  sections.querySelectorAll('.nav-sections .default-content-wrapper > ul > li').forEach((section) => {
-    section.setAttribute('aria-expanded', expanded);
+function closeAllSections(navSections, except) {
+  if (!navSections) return;
+  navSections.querySelectorAll(':scope .default-content-wrapper > ul > li').forEach((li) => {
+    if (li !== except) li.setAttribute('aria-expanded', 'false');
   });
 }
 
+function closeOnEscape(e) {
+  if (e.code !== 'Escape') return;
+  const nav = document.getElementById('nav');
+  const navSections = nav?.querySelector('.nav-sections');
+  if (!navSections) return;
+  const open = navSections.querySelector(':scope .default-content-wrapper > ul > li[aria-expanded="true"]');
+  if (open) {
+    closeAllSections(navSections);
+    open.querySelector(':scope > button, :scope > a')?.focus();
+  } else if (!isDesktop.matches) {
+    // eslint-disable-next-line no-use-before-define
+    toggleMenu(nav, navSections);
+    nav.querySelector('.nav-hamburger button')?.focus();
+  }
+}
+
+// close any open mega-menu when clicking/focusing outside the nav
+function closeOnOutsideInteraction(e) {
+  const nav = document.getElementById('nav');
+  if (!nav) return;
+  if (!nav.contains(e.target)) {
+    closeAllSections(nav.querySelector('.nav-sections'));
+    nav.querySelectorAll('.nav-tools .nav-tool-drop[aria-expanded="true"]').forEach((li) => li.setAttribute('aria-expanded', 'false'));
+  }
+}
+
 /**
- * Toggles the entire nav
- * @param {Element} nav The container element
- * @param {Element} navSections The nav sections within the container element
- * @param {*} forceExpanded Optional param to force nav expand behavior when not null
+ * Toggle a single top-level section (mega-menu). Single-open: closes the others.
+ * @param {Element} li the top-level list item
+ * @param {Element} navSections the .nav-sections container
+ */
+function toggleSection(li, navSections) {
+  const wasOpen = li.getAttribute('aria-expanded') === 'true';
+  closeAllSections(navSections);
+  li.setAttribute('aria-expanded', wasOpen ? 'false' : 'true');
+}
+
+/**
+ * Toggles the entire nav (mobile hamburger)
  */
 function toggleMenu(nav, navSections, forceExpanded = null) {
   const expanded = forceExpanded !== null ? !forceExpanded : nav.getAttribute('aria-expanded') === 'true';
   const button = nav.querySelector('.nav-hamburger button');
   document.body.style.overflowY = (expanded || isDesktop.matches) ? '' : 'hidden';
   nav.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-  toggleAllNavSections(navSections, expanded || isDesktop.matches ? 'false' : 'true');
-  button.setAttribute('aria-label', expanded ? 'Open navigation' : 'Close navigation');
-  // enable nav dropdown keyboard accessibility
-  if (navSections) {
-    const navDrops = navSections.querySelectorAll('.nav-drop');
-    if (isDesktop.matches) {
-      navDrops.forEach((drop) => {
-        if (!drop.hasAttribute('tabindex')) {
-          drop.setAttribute('tabindex', 0);
-          drop.addEventListener('focus', focusNavSection);
-        }
-      });
-    } else {
-      navDrops.forEach((drop) => {
-        drop.removeAttribute('tabindex');
-        drop.removeEventListener('focus', focusNavSection);
-      });
-    }
-  }
+  closeAllSections(navSections);
+  button?.setAttribute('aria-label', expanded ? 'Open navigation' : 'Close navigation');
 
-  // enable menu collapse on escape keypress
   if (!expanded || isDesktop.matches) {
-    // collapse menu on escape press
     window.addEventListener('keydown', closeOnEscape);
-    // collapse menu on focus lost
-    nav.addEventListener('focusout', closeOnFocusLost);
   } else {
     window.removeEventListener('keydown', closeOnEscape);
-    nav.removeEventListener('focusout', closeOnFocusLost);
   }
+}
+
+/**
+ * Wrap a top-level li's label (a bare text node or leading <p>) in a
+ * <button class="nav-drop-label"> trigger so it can carry click/keyboard
+ * handlers and the active underline.
+ * @returns {HTMLButtonElement|null}
+ */
+function buildTrigger(li) {
+  const nestedList = li.querySelector(':scope > ul');
+  if (!nestedList) return null;
+
+  // The label may be a bare text node or wrapped in a <p> before the nested <ul>.
+  // Ignore whitespace-only text nodes; take the first meaningful label source.
+  let label = '';
+  const leadingP = [...li.children].find((c) => c.tagName === 'P');
+  if (leadingP && !li.querySelector(':scope > .nav-drop-label')) {
+    label = leadingP.textContent.trim();
+    leadingP.remove();
+  } else {
+    // fall back to leading text nodes
+    [...li.childNodes].forEach((n) => {
+      if (n.nodeType === Node.TEXT_NODE && n.textContent.trim() && !label) {
+        label = n.textContent.trim();
+      }
+      if (n.nodeType === Node.TEXT_NODE) n.remove();
+    });
+  }
+  const trigger = document.createElement('button');
+  trigger.type = 'button';
+  trigger.className = 'nav-drop-label';
+  trigger.setAttribute('aria-expanded', 'false');
+  trigger.textContent = label;
+  li.prepend(trigger);
+  return trigger;
+}
+
+/**
+ * Products fund data per left-menu category, captured from production
+ * (point-in-time snapshot, not live). `metric` selects the card layout:
+ *  - 'price'  : ticker, name, dateLabel, price, direction (up|down)
+ *  - 'yield'  : ticker, name, dateLabel, subsidized, unsubsidized
+ *  - 'assets' : ticker, name, dateLabel, assets
+ * Categories with no production cards are omitted (empty right panel).
+ */
+const PRODUCTS_DATA = {
+  'mutual-funds': {
+    metric: 'price',
+    href: '/im/en-us/individual-investor/products/mutual-funds.html',
+    cards: [
+      {
+        ticker: 'MELIX • Class I', name: 'Emerging Markets Leaders Portfolio', dateLabel: 'NAV as of 09/01/2026', price: '$18.23', direction: 'down',
+      },
+      {
+        ticker: 'MUOIX • Class I', name: 'US Core Portfolio', dateLabel: 'NAV as of 09/01/2026', price: '$36.31', direction: 'down',
+      },
+      {
+        ticker: 'USGDX • Class I', name: 'Long Duration Government Opportunities Fund', dateLabel: 'NAV as of 09/01/2026', price: '$6.48', direction: 'down',
+      },
+      {
+        ticker: 'MSFAX • Class I', name: 'Global Franchise Portfolio', dateLabel: 'NAV as of 09/01/2026', price: '$28.47', direction: 'down',
+      },
+    ],
+  },
+  'etfs-etps': {
+    metric: 'price',
+    href: '/im/en-us/individual-investor/products/etfs.html',
+    cards: [
+      {
+        ticker: 'MSBT', name: 'Morgan Stanley Bitcoin Trust', dateLabel: 'Market Price as of 09/01/2026', price: '$22.14', direction: 'down',
+      },
+      {
+        ticker: 'EVTR', name: 'Eaton Vance Total Return Bond ETF', dateLabel: 'Market Price as of 09/01/2026', price: '$49.76', direction: 'down',
+      },
+      {
+        ticker: 'EVSM', name: 'Eaton Vance Short Duration Municipal Income ETF', dateLabel: 'Market Price as of 09/01/2026', price: '$49.97', direction: 'down',
+      },
+      {
+        ticker: 'PAPI', name: 'Parametric Equity Premium Income ETF', dateLabel: 'Market Price as of 09/01/2026', price: '$27.79', direction: 'down',
+      },
+    ],
+  },
+  'registered-alternatives': {
+    metric: 'price',
+    href: '/im/en-us/individual-investor/products/registered-alternatives.html',
+    cards: [
+      {
+        ticker: 'Class I', name: 'North Haven Private Assets Fund', dateLabel: 'NAV as of 07/31/2026', price: '$24.32', direction: 'up',
+      },
+      { ticker: 'Class A', name: 'AIP Alternative Lending Fund A' },
+      { ticker: 'Class A', name: 'Alternative Investment Partners Absolute Return Fund STS' },
+    ],
+  },
+  'money-market-funds': {
+    metric: 'yield',
+    href: '/im/en-us/individual-investor/products/money-market-funds.html',
+    cards: [
+      {
+        ticker: 'MWMXX • Class WH', name: 'Money Market Portfolio', dateLabel: '7-Day Current Yield as of 09/01/2026', subsidized: '3.74', unsubsidized: '3.67',
+      },
+      {
+        ticker: 'TEWXX • Class WH', name: 'Tax-Exempt', dateLabel: '7-Day Current Yield as of 09/01/2026', subsidized: '2.24', unsubsidized: '2.11',
+      },
+      {
+        ticker: 'DWGXX • Class R', name: 'U.S. Government Money Market Trust', dateLabel: '7-Day Current Yield as of 09/01/2026', subsidized: '3.35', unsubsidized: '3.35',
+      },
+    ],
+  },
+  'liquidity-funds': {
+    metric: 'assets',
+    href: '/im/en-us/individual-investor/products/liquidity-funds.html',
+    cards: [
+      {
+        ticker: 'MVRXX • Class IN', name: 'Government', dateLabel: 'Fund Assets as of 09/01/2026', assets: '$215,287 MM',
+      },
+      {
+        ticker: 'MPFXX • Class IN', name: 'Prime', dateLabel: 'Fund Assets as of 09/01/2026', assets: '$14,688 MM',
+      },
+      {
+        ticker: 'MISXX • Class IN', name: 'Treasury', dateLabel: 'Fund Assets as of 09/01/2026', assets: '$39,328 MM',
+      },
+    ],
+  },
+};
+
+/** Render one fund card's inner HTML for the given metric type. */
+function fundCardHtml(card, metric, href) {
+  const head = `<span class="nav-fund-ticker">${card.ticker || ''}</span>
+    <span class="nav-fund-name">${card.name || ''}</span>`;
+  let body = '';
+  if (metric === 'price' && card.price) {
+    const isUp = card.direction === 'up';
+    body = `<span class="nav-fund-navdate">${card.dateLabel}</span>
+      <span class="nav-fund-nav">
+        <span class="nav-fund-arrow ${isUp ? 'is-up' : 'is-down'}" aria-hidden="true"></span>
+        <span class="nav-fund-price">${card.price}</span>
+      </span>`;
+  } else if (metric === 'yield' && card.subsidized) {
+    body = `<span class="nav-fund-navdate">${card.dateLabel}</span>
+      <span class="nav-fund-yields">
+        <span class="nav-fund-yield"><span class="nav-fund-yield-label">Subsidized (%)</span><span class="nav-fund-yield-value">${card.subsidized}</span></span>
+        <span class="nav-fund-yield"><span class="nav-fund-yield-label">Unsubsidized (%)</span><span class="nav-fund-yield-value">${card.unsubsidized}</span></span>
+      </span>`;
+  } else if (metric === 'assets' && card.assets) {
+    body = `<span class="nav-fund-navdate">${card.dateLabel}</span>
+      <span class="nav-fund-nav"><span class="nav-fund-price">${card.assets}</span></span>`;
+  }
+  return `<a class="nav-fund-card" href="${href}">${head}${body}</a>`;
+}
+
+/**
+ * Build the Products mega-menu: give each left <li> a data-panel key and render
+ * one right-side card panel per category; hovering/focusing a left item shows
+ * that panel. Only categories present in PRODUCTS_DATA get cards.
+ * @param {Element} li Products top-level item
+ * @param {Element} list its nested <ul> of category links
+ * @param {Element} panel the .nav-megamenu container
+ * @param {Element} left the .nav-megamenu-links wrapper
+ */
+function buildProductsPanels(li, list, panel, left) {
+  left.classList.add('nav-megamenu-links-selectable', 'nav-megamenu-links-products');
+
+  const panelsWrap = document.createElement('div');
+  panelsWrap.className = 'nav-products-panels';
+
+  const leftItems = [...list.querySelectorAll(':scope > li')];
+  leftItems.forEach((item, i) => {
+    const text = item.textContent.trim();
+    const slug = text.toLowerCase()
+      .replace(/&/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+    item.dataset.panel = slug;
+    if (i === 0) item.classList.add('is-active');
+
+    const data = PRODUCTS_DATA[slug];
+    const cardPanel = document.createElement('div');
+    cardPanel.className = 'nav-megamenu-featured nav-megamenu-featured-navy nav-products-panel';
+    cardPanel.dataset.panel = slug;
+    if (i === 0) cardPanel.classList.add('is-active');
+    if (data) {
+      cardPanel.classList.add(`nav-products-panel--${data.metric}`);
+      cardPanel.innerHTML = data.cards.map((c) => fundCardHtml(c, data.metric, data.href)).join('');
+    }
+    panelsWrap.append(cardPanel);
+
+    const activate = () => {
+      leftItems.forEach((it) => it.classList.toggle('is-active', it === item));
+      panelsWrap.querySelectorAll('.nav-products-panel').forEach((p) => {
+        p.classList.toggle('is-active', p.dataset.panel === slug);
+      });
+    };
+    item.addEventListener('mouseenter', activate);
+    // focusing the child link also activates (keyboard)
+    item.querySelector('a')?.addEventListener('focus', activate);
+  });
+
+  panel.append(panelsWrap);
+}
+
+/**
+ * Decorate a top-level mega-menu panel: left link column + optional right
+ * FEATURED promo card (mirrors production).
+ * @param {Element} li top-level item
+ * @param {string} label its text label
+ */
+function decoratePanel(li, label) {
+  const list = li.querySelector(':scope > ul');
+  if (!list) return;
+
+  const panel = document.createElement('div');
+  panel.className = 'nav-megamenu';
+
+  const left = document.createElement('div');
+  left.className = 'nav-megamenu-links';
+  left.append(list);
+  panel.append(left);
+
+  const key = label.trim().toLowerCase();
+  const featured = {
+    capabilities: {
+      variant: 'navy',
+      img: '/media-da/59f033c687c178b6715244ada69e2353.jpg',
+      title: 'Crypto, Built Into Your Portfolio',
+      body: 'Access a cost-efficient, exchange-traded way to gain crypto exposure.',
+      href: '/im/en-us/individual-investor/capabilities/crypto',
+    },
+    insights: {
+      variant: 'purple',
+      title: 'The BEAT™',
+      body: 'Help clients understand and unlock the value in today’s markets.',
+      href: 'https://www.morganstanley.com/im/en-us/individual-investor/insights/series/the-beat.html',
+    },
+  };
+  const promo = featured[key];
+  if (promo) {
+    const card = document.createElement('a');
+    card.className = `nav-megamenu-featured nav-megamenu-featured-${promo.variant}`;
+    card.href = promo.href;
+    card.innerHTML = `<span class="nav-megamenu-featured-body">
+        <span class="nav-megamenu-featured-eyebrow">FEATURED</span>
+        ${promo.img ? `<span class="nav-megamenu-featured-img"><img src="${promo.img}" alt="" loading="lazy"></span>` : ''}
+        <span class="nav-megamenu-featured-title">${promo.title}</span>
+        <span class="nav-megamenu-featured-text">${promo.body}</span>
+      </span>`;
+    panel.append(card);
+  }
+
+  // Products: each left item swaps the right panel on hover/focus. Per-category
+  // fund cards are hard-coded from production (a maintained point-in-time
+  // snapshot, not live data). Three metric variants: 'price' (NAV/Market Price
+  // + arrow), 'yield' (7-Day Current Yield, Subsidized/Unsubsidized %),
+  // 'assets' (Fund Assets). Categories with no production cards render empty.
+  if (key === 'products') {
+    // eslint-disable-next-line no-use-before-define
+    buildProductsPanels(li, list, panel, left);
+  }
+
+  // Insights: 3-column layout — left (Insights, Series ›), middle (the Series
+  // child links, shown when Series is active), right (purple FEATURED card).
+  if (key === 'insights') {
+    // eslint-disable-next-line no-use-before-define
+    buildInsightsColumns(list, panel, left);
+  }
+
+  li.append(panel);
+}
+
+/**
+ * Insights mega-menu: pull the nested "Series" list out into its own middle
+ * column. The left column keeps top-level items (Insights, Series ›); hovering
+ * "Series" shows the middle column of series links. The right FEATURED card is
+ * appended separately by decoratePanel.
+ * @param {Element} list the Insights nested <ul>
+ * @param {Element} panel the .nav-megamenu container
+ * @param {Element} left the .nav-megamenu-links wrapper
+ */
+function buildInsightsColumns(list, panel, left) {
+  const seriesLi = [...list.querySelectorAll(':scope > li')]
+    .find((li) => /^Series\b/i.test(li.textContent.trim()));
+  if (!seriesLi) return;
+
+  const seriesSub = seriesLi.querySelector(':scope > ul');
+  if (!seriesSub) return;
+
+  // Build the middle column from the Series children, then remove the nested
+  // list from the left so the left column shows only top-level items.
+  const mid = document.createElement('div');
+  mid.className = 'nav-insights-series';
+  const midList = seriesSub.cloneNode(true);
+  seriesSub.remove();
+  mid.append(midList);
+
+  // Mark left as the insights variant + add a caret affordance on "Series".
+  left.classList.add('nav-megamenu-links-insights');
+  seriesLi.classList.add('nav-insights-series-trigger', 'is-active');
+
+  // Insert the middle column BEFORE the featured card so column order is
+  // left links | series (middle) | featured (right), matching production.
+  const featuredCard = panel.querySelector('.nav-megamenu-featured');
+  if (featuredCard) panel.insertBefore(mid, featuredCard);
+  else panel.append(mid);
+
+  // Hovering/focusing "Series" (or its middle column) keeps it active; hovering
+  // the plain "Insights" item hides the series column.
+  const items = [...list.querySelectorAll(':scope > li')];
+  const showSeries = (on) => {
+    seriesLi.classList.toggle('is-active', on);
+    mid.classList.toggle('is-active', on);
+  };
+  showSeries(true);
+  items.forEach((it) => {
+    const isSeries = it === seriesLi;
+    it.addEventListener('mouseenter', () => showSeries(isSeries));
+    it.querySelector('a, button')?.addEventListener('focus', () => showSeries(isSeries));
+  });
+  mid.addEventListener('mouseenter', () => showSeries(true));
 }
 
 /**
@@ -131,7 +411,7 @@ export default async function decorate(block) {
   });
 
   const navBrand = nav.querySelector('.nav-brand');
-  const brandLink = navBrand.querySelector('.button');
+  const brandLink = navBrand?.querySelector('.button');
   if (brandLink) {
     brandLink.className = '';
     brandLink.closest('.button-container').className = '';
@@ -140,15 +420,44 @@ export default async function decorate(block) {
   const navSections = nav.querySelector('.nav-sections');
   if (navSections) {
     navSections.querySelectorAll(':scope .default-content-wrapper > ul > li').forEach((navSection) => {
-      if (navSection.querySelector('ul')) navSection.classList.add('nav-drop');
-      navSection.addEventListener('click', () => {
-        if (isDesktop.matches) {
-          const expanded = navSection.getAttribute('aria-expanded') === 'true';
-          toggleAllNavSections(navSections);
-          navSection.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-        }
-      });
+      const label = navSection.textContent.trim().split('\n')[0].trim();
+      if (navSection.querySelector(':scope > ul')) {
+        navSection.classList.add('nav-drop');
+        const trigger = buildTrigger(navSection);
+        decoratePanel(navSection, label);
+        trigger?.addEventListener('click', (e) => {
+          if (!isDesktop.matches) return;
+          if (e.target.closest('.nav-megamenu')) return; // let child links navigate
+          e.preventDefault();
+          e.stopPropagation();
+          toggleSection(navSection, navSections);
+        });
+      }
     });
+  }
+
+  // utility tools dropdowns (country selector, Account Access) + search
+  const navTools = nav.querySelector('.nav-tools');
+  if (navTools) {
+    navTools.querySelectorAll(':scope .default-content-wrapper > ul > li').forEach((li) => {
+      if (li.querySelector(':scope > ul')) {
+        li.classList.add('nav-tool-drop');
+        const trigger = buildTrigger(li);
+        trigger?.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const open = li.getAttribute('aria-expanded') === 'true';
+          navTools.querySelectorAll(':scope .default-content-wrapper > ul > li').forEach((o) => o.setAttribute('aria-expanded', 'false'));
+          li.setAttribute('aria-expanded', open ? 'false' : 'true');
+        });
+      }
+    });
+
+    const search = document.createElement('button');
+    search.type = 'button';
+    search.className = 'nav-search';
+    search.setAttribute('aria-label', 'Search');
+    navTools.append(search);
   }
 
   // hamburger for mobile
@@ -160,9 +469,12 @@ export default async function decorate(block) {
   hamburger.addEventListener('click', () => toggleMenu(nav, navSections));
   nav.prepend(hamburger);
   nav.setAttribute('aria-expanded', 'false');
-  // prevent mobile nav behavior on window resize
   toggleMenu(nav, navSections, isDesktop.matches);
   isDesktop.addEventListener('change', () => toggleMenu(nav, navSections, isDesktop.matches));
+
+  // close on outside click / Escape (desktop mega-menu)
+  document.addEventListener('click', closeOnOutsideInteraction);
+  window.addEventListener('keydown', closeOnEscape);
 
   const navWrapper = document.createElement('div');
   navWrapper.className = 'nav-wrapper';
