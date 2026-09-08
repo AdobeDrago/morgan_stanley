@@ -1,3 +1,139 @@
 .article {
-  /* TODO: style the article block */
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+.article-masthead {
+  margin-bottom: 2rem;
+}
+
+.article-hero {
+  display: block;
+  margin-bottom: 1.5rem;
+}
+
+.article-hero img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.article-eyebrow {
+  margin: 0 0 0.5rem;
+  font-size: var(--body-font-size-s);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--link-color);
+}
+
+.article-masthead h1 {
+  margin: 0 0 0.75rem;
+}
+
+.article-date {
+  margin: 0;
+  font-size: var(--body-font-size-s);
+  color: var(--dark-color, #505050);
+}
+
+/* Byline */
+.article-byline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--light-color, #eee);
+}
+
+.article-author {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.article-author-photo img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.article-author-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.article-author-name {
+  font-weight: 700;
+}
+
+.article-author-role {
+  font-size: var(--body-font-size-xs, 0.75rem);
+  color: var(--dark-color, #505050);
+}
+
+/* Related Insights */
+.article-related {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--light-color, #eee);
+}
+
+.article-related h2 {
+  margin-top: 0;
+}
+
+.article-related .cards {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+
+.article-related .cards li {
+  border: 1px solid var(--light-color, #eee);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.article-related .cards a {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.article-related .cards-card-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.article-related .cards-card-body {
+  padding: 1rem;
+}
+
+.article-related-series {
+  margin: 0 0 0.25rem;
+  font-size: var(--body-font-size-xs, 0.75rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--link-color);
+}
+
+.article-related-title {
+  margin: 0 0 0.5rem;
+  font-weight: 700;
+}
+
+.article-related-date {
+  margin: 0;
+  font-size: var(--body-font-size-xs, 0.75rem);
+  color: var(--dark-color, #505050);
 }
