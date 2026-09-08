@@ -237,20 +237,23 @@ header nav .nav-drop-label {
   }
 
   /* --- main menu bar --- */
-  header nav .nav-sections {
+  header nav .nav-sections,
+  header nav[aria-expanded='true'] .nav-sections {
     display: flex;
     visibility: visible;
     flex: 1 1 auto;
+    align-items: center;
     justify-content: flex-end;
+    gap: 24px;
   }
 
-  header nav .nav-sections .default-content-wrapper,
-  header nav .nav-sections .default-content-wrapper > ul {
-    width: 100%;
+  header nav .nav-sections .default-content-wrapper {
+    flex: 1 1 auto;
   }
 
   header nav .nav-sections .default-content-wrapper > ul {
     display: flex;
+    width: 100%;
     align-items: center;
     justify-content: flex-end;
     gap: 32px;
@@ -619,21 +622,38 @@ header nav .nav-drop-label {
     gap: 20px;
     width: 100%;
     padding-bottom: 8px;
-    border-bottom: 1px solid #e6e6e6;
   }
 
   /* brand stays a single line in the main bar (no skinny-column wrap) */
   header nav .nav-brand a { white-space: nowrap; }
 
+  header nav .nav-tools .default-content-wrapper,
+  header nav .nav-tools .default-content-wrapper > ul {
+    width: 100%;
+  }
+
   header nav .nav-tools .default-content-wrapper > ul {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     gap: 20px;
     margin: 0;
     list-style: none;
     padding: 0;
     font-size: 14px;
     color: #333;
+  }
+
+  /* USA flag before the country/region selector (inline SVG for cross-browser parity) */
+  header nav .nav-tools .nav-tool-country .nav-drop-label::before {
+    content: '';
+    width: 22px;
+    height: 15px;
+    margin-right: 8px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 7410 3900"><rect width="7410" height="3900" fill="%23b22234"/><g fill="%23fff"><rect y="300" width="7410" height="300"/><rect y="900" width="7410" height="300"/><rect y="1500" width="7410" height="300"/><rect y="2100" width="7410" height="300"/><rect y="2700" width="7410" height="300"/><rect y="3300" width="7410" height="300"/></g><rect width="2964" height="2100" fill="%233c3b6e"/></svg>');
+    background-size: cover;
+    background-repeat: no-repeat;
+    border: 1px solid rgb(0 0 0 / 10%);
   }
 
   header nav .nav-tools .nav-tool-drop { position: relative; }
@@ -688,8 +708,9 @@ header nav .nav-drop-label {
     color: var(--ms-teal);
   }
 
-  /* search control */
+  /* search control — sits in the main bar, right of Contact Us */
   header nav .nav-search {
+    flex: none;
     width: 22px;
     height: 22px;
     margin: 0;
@@ -697,7 +718,7 @@ header nav .nav-drop-label {
     border: 0;
     background: transparent;
     cursor: pointer;
-    color: var(--ms-teal);
+    color: var(--ms-primary-blue);
   }
 
   header nav .nav-search::before {
