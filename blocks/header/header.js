@@ -5,8 +5,10 @@ import { loadFragment } from '../fragment/fragment.js';
 const isDesktop = window.matchMedia('(min-width: 900px)');
 
 /**
- * Search category tabs. `key` maps to the future query-index result buckets;
- * counts stay (0) until the search is wired up.
+ * Search category tabs. A result is bucketed into a tab when its query-index
+ * `tag` matches the tab (see tagMatchesTab — either the `key` or the `label`,
+ * compared case/format-insensitively). Tabs stay at (0) for any tag value that
+ * matches none of these.
  */
 const SEARCH_TABS = [
   { key: 'products', label: 'Products' },
@@ -16,10 +18,8 @@ const SEARCH_TABS = [
 ];
 
 /**
- * Shared search state. The real search (backed by the site query-index) will
- * set `query` and fill each `results` bucket, then call updateCounts() +
- * renderResults(). Until then every bucket is empty and the UI shows the empty
- * state — this is the shell, wiring only.
+ * Shared search state: the current query and one result bucket per tab, filled
+ * by the search against /query-index.json (see decorateSearch → runSearch).
  */
 const searchState = {
   query: '',
@@ -412,6 +412,90 @@ function buildInsightsColumns(list, panel, left) {
   mid.addEventListener('mouseenter', () => showSeries(true));
 }
 
+// Cache the query-index fetch so it's loaded at most once per page.
+let searchIndexPromise = null;
+
+/** Fetch and cache the site query-index rows (returns [] on any failure). */
+function loadSearchIndex() {
+  if (!searchIndexPromise) {
+    searchIndexPromise = fetch('/query-index.json')
+      .then((res) => (res.ok ? res.json() : { data: [] }))
+      .then((json) => json.data || [])
+      .catch(() => []);
+  }
+  return searchIndexPromise;
+}
+
+// Structural/non-content paths that must never surface in search results.
+const NON_CONTENT_PATHS = [/^\/$/, /\/nav$/, /\/footer$/, /\/imgtest\d*$/, /block-library/, /^\/drafts\//];
+
+/** A row is searchable content only if it has a title and isn't structural. */
+function isContentRow(row) {
+  return Boolean(row.title) && !NON_CONTENT_PATHS.some((re) => re.test(row.path));
+}
+
+/**
+ * True when a row's `tag` matches the tab. `tag` may be a single value, a
+ * comma-separated list, or a JSON-array string; each is compared against the
+ * tab's key and label with punctuation/case ignored (so "Teams & People",
+ * "teams-people" and "teamspeople" all match the Teams & People tab).
+ */
+function tagMatchesTab(tag, tab) {
+  if (!tag) return false;
+  const raw = String(tag).trim();
+  let values;
+  if (raw.startsWith('[')) {
+    try { values = JSON.parse(raw); } catch { values = [raw]; }
+  } else {
+    values = raw.split(',');
+  }
+  const norm = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '');
+  const targets = [norm(tab.key), norm(tab.label)];
+  return values.some((v) => targets.includes(norm(v)));
+}
+
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+/**
+ * Format a query-index date for display as "01 September 2026". Accepts a
+ * `lastModified` epoch (seconds or milliseconds) or an ISO date string, and
+ * returns '' when there's nothing usable.
+ */
+function formatSearchDate(value) {
+  if (value === undefined || value === null || value === '') return '';
+  const raw = String(value).trim();
+  if (/^\d+$/.test(raw)) {
+    const num = Number(raw);
+    const d = new Date(num < 1e12 ? num * 1000 : num); // epoch seconds vs ms
+    if (Number.isNaN(d.getTime())) return '';
+    return `${String(d.getUTCDate()).padStart(2, '0')} ${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+  }
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(raw);
+  if (m) return `${m[3]} ${MONTHS[Number(m[2]) - 1]} ${m[1]}`;
+  return raw;
+}
+
+/** Readable content-type label derived from a row's path. */
+function sectionLabel(path) {
+  if (path.startsWith('/authors/')) return 'Author';
+  if (path.startsWith('/insights/')) return 'Article';
+  if (path.includes('/capabilities/')) return 'Capability';
+  if (path.includes('/campaigns/')) return 'Campaign';
+  return 'Page';
+}
+
+/** Map a query-index row to a result item for renderResults(). */
+function toResultItem(row) {
+  const title = row.title.replace(/\s*\|\s*Morgan Stanley\s*$/i, '').trim();
+  return {
+    title: title || row.title,
+    date: formatSearchDate(row.lastModified ?? row.date),
+    category: row.tag ? String(row.tag).toUpperCase() : sectionLabel(row.path).toUpperCase(),
+    type: 'Article',
+    href: row.path,
+  };
+}
+
 /** Update each tab's (n) count from searchState. */
 function updateCounts(panel) {
   SEARCH_TABS.forEach(({ key }) => {
@@ -426,10 +510,10 @@ function totalResults() {
 }
 
 /**
- * Render the active tab's results, or the empty state. Expects each result as
- * { title, date, category, type, href }; the future search fills
- * searchState.results before calling this. When nothing matches across all
- * buckets, show the centered "No results to display" state.
+ * Render the active tab's results, or an empty state. Each result is shaped
+ * { title, date, category, type, href } by toResultItem(). When nothing matched
+ * across all buckets, show the centered "No results to display"; when the active
+ * tab alone is empty, show a lighter per-category message.
  * @param {Element} panel the .nav-search-panel element
  */
 function renderResults(panel) {
@@ -440,6 +524,10 @@ function renderResults(panel) {
   }
   const activeKey = panel.querySelector('.nav-search-tab.is-active')?.dataset.tab;
   const items = searchState.results[activeKey] || [];
+  if (!items.length) {
+    results.innerHTML = '<p class="nav-search-empty">No results in this category</p>';
+    return;
+  }
   results.innerHTML = items.map((item) => `<a class="nav-search-result" href="${item.href || '#'}">
       <span class="nav-search-result-title">${item.title || ''}</span>
       <span class="nav-search-result-date">${item.date || ''}</span>
@@ -491,18 +579,55 @@ function decorateSearch(nav, navWrapper) {
   const results = panel.querySelector('.nav-search-results');
   const tabButtons = [...panel.querySelectorAll('.nav-search-tab')];
 
-  // Reveal CLEAR + results once there is a query; tabs only appear when at
-  // least one category has matches (an all-empty query shows "No results").
+  const setActiveTab = (key) => {
+    tabButtons.forEach((b) => {
+      const active = b.dataset.tab === key;
+      b.classList.toggle('is-active', active);
+      b.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+  };
+
+  // Query /query-index.json: keep content rows whose title/description contain
+  // the query, bucket each into a tab by its `tag`, then render. Guards against
+  // out-of-order responses by re-checking the query after the async load.
+  const runSearch = () => {
+    const q = searchState.query.toLowerCase();
+    loadSearchIndex().then((rows) => {
+      if (searchState.query.toLowerCase() !== q) return;
+      SEARCH_TABS.forEach(({ key }) => { searchState.results[key] = []; });
+      rows.filter(isContentRow).forEach((row) => {
+        const haystack = `${row.title} ${row.description || ''}`.toLowerCase();
+        if (!haystack.includes(q)) return;
+        const tab = SEARCH_TABS.find((t) => tagMatchesTab(row.tag, t));
+        if (tab) searchState.results[tab.key].push(toResultItem(row));
+      });
+      updateCounts(panel);
+      const total = totalResults();
+      tabs.hidden = !total;
+      // if the active tab has no matches, jump to the first tab that does
+      if (total) {
+        const activeKey = panel.querySelector('.nav-search-tab.is-active')?.dataset.tab;
+        if (!searchState.results[activeKey]?.length) {
+          const firstHit = SEARCH_TABS.find((t) => searchState.results[t.key].length);
+          if (firstHit) setActiveTab(firstHit.key);
+        }
+      }
+      renderResults(panel);
+    });
+  };
+
+  // Reveal CLEAR + results once there is a query, then search. An empty query
+  // clears the buckets and hides the tabs.
   const reflectQueryState = () => {
     const hasQuery = searchState.query.length > 0;
     clearBtn.hidden = !hasQuery;
     results.hidden = !hasQuery;
-    if (hasQuery) {
-      // TODO: query the site index here and fill searchState.results.
-      updateCounts(panel);
-      renderResults(panel);
+    if (!hasQuery) {
+      SEARCH_TABS.forEach(({ key }) => { searchState.results[key] = []; });
+      tabs.hidden = true;
+      return;
     }
-    tabs.hidden = !hasQuery || !totalResults();
+    runSearch();
   };
 
   const openPanel = () => {
@@ -512,6 +637,7 @@ function decorateSearch(nav, navWrapper) {
     toggle.setAttribute('aria-expanded', 'true');
     toggle.setAttribute('aria-label', 'Close search');
     closeAllSections(nav.querySelector('.nav-sections'));
+    loadSearchIndex(); // warm the cache so the first query renders instantly
     input.focus();
   };
 
@@ -532,9 +658,11 @@ function decorateSearch(nav, navWrapper) {
     else closePanel();
   });
 
+  let debounce;
   input.addEventListener('input', () => {
     searchState.query = input.value.trim();
-    reflectQueryState();
+    clearTimeout(debounce);
+    debounce = setTimeout(reflectQueryState, 120);
   });
 
   clearBtn.addEventListener('click', () => {
@@ -544,14 +672,10 @@ function decorateSearch(nav, navWrapper) {
     input.focus();
   });
 
-  // Tab switching (visual only until results are wired in).
+  // Tab switching: activate the clicked tab and re-render its bucket.
   tabButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
-      tabButtons.forEach((b) => {
-        const active = b === btn;
-        b.classList.toggle('is-active', active);
-        b.setAttribute('aria-selected', active ? 'true' : 'false');
-      });
+      setActiveTab(btn.dataset.tab);
       renderResults(panel);
     });
   });

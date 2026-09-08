@@ -18,8 +18,6 @@ header .nav-wrapper {
   position: fixed;
   z-index: 3;
   width: 100%;
-  background-color: var(--background-color);
-  box-shadow: 0 1px 0 rgb(0 0 0 / 8%);
 }
 
 /*
@@ -51,6 +49,11 @@ header nav {
   height: var(--nav-height);
   padding: 0 24px;
   font-family: var(--ms-brand-font);
+
+  /* header background lives here (not .nav-wrapper) so the search panel that
+     drops below can show the dark scrim in its side gutters */
+  background-color: var(--background-color);
+  box-shadow: 0 1px 0 rgb(0 0 0 / 8%);
 }
 
 header nav[aria-expanded='true'] {
@@ -792,10 +795,11 @@ header nav .nav-drop-label {
 
   .nav-search-scrim[hidden] { display: none; }
 
+  /* Panel spans full width but is transparent, so the scrim shows through its
+     side gutters. The white surface is the centered inner column below. */
   header .nav-search-panel {
     width: 100%;
-    background: var(--background-color);
-    box-shadow: 0 8px 12px rgb(0 0 0 / 8%);
+    background: transparent;
   }
 
   header .nav-search-inner {
@@ -803,6 +807,8 @@ header nav .nav-drop-label {
     max-width: 1280px;
     margin: auto;
     padding: 16px 24px 32px;
+    background: var(--background-color);
+    box-shadow: 0 8px 12px rgb(0 0 0 / 8%);
   }
 
   header .nav-search-bar {
@@ -946,6 +952,7 @@ header nav .nav-drop-label {
   header .nav-search-result-category {
     text-transform: uppercase;
     letter-spacing: 0.02em;
+    text-align: center;
   }
 }
 
