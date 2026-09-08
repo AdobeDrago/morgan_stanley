@@ -32,13 +32,30 @@ export default function decorate(block) {
   const links = [...nav.querySelectorAll('a')];
   const targets = tabs.map((t) => document.getElementById(t.id)).filter(Boolean);
 
-  // smooth scroll, accounting for the site header + sticky bar height
+  // The site header is a fixed, two-row bar whose real height is not the 64px
+  // --nav-height. Measure the actual fixed header and pin the sticky bar right
+  // below it (via --section-nav-top), so there is no gap at the top and no
+  // overlap. Re-measure on resize (the header height changes across breakpoints).
+  const section = block.closest('.section') || block;
+  const syncOffset = () => {
+    const header = document.querySelector('header .nav-wrapper')
+      || document.querySelector('header');
+    const h = header ? Math.round(header.getBoundingClientRect().height) : 64;
+    section.style.setProperty('--section-nav-top', `${h}px`);
+  };
+  syncOffset();
+  window.addEventListener('resize', syncOffset);
+  window.addEventListener('load', syncOffset);
+
+  // smooth scroll, accounting for the fixed header + this sticky bar's height
   links.forEach((a) => {
     a.addEventListener('click', (e) => {
       const el = document.getElementById(a.dataset.target);
       if (!el) return;
       e.preventDefault();
-      const offset = nav.getBoundingClientRect().height + 64;
+      const headerH = parseInt(getComputedStyle(section)
+        .getPropertyValue('--section-nav-top'), 10) || 64;
+      const offset = nav.getBoundingClientRect().height + headerH;
       const top = el.getBoundingClientRect().top + window.scrollY - offset;
       window.scrollTo({ top, behavior: 'smooth' });
     });

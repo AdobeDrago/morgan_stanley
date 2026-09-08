@@ -13,7 +13,7 @@
    section margins/max-width. */
 main > .section.section-nav-container {
   position: sticky;
-  top: var(--nav-height, 64px);
+  top: var(--section-nav-top, var(--nav-height, 64px));
   z-index: 40;
   margin: 0;
   background-color: #fff;
