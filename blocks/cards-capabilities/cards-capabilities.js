@@ -23,10 +23,17 @@ export default function decorate(block) {
     while (body && body.firstChild) bodyDiv.append(body.firstChild);
     li.append(bodyDiv);
 
+    // The card's link becomes the arrow's target. Prefer a standalone CTA link
+    // (not the one inside the heading); remove its now-redundant paragraph so it
+    // doesn't render as duplicate body text. Keep a heading link in place.
+    const links = [...bodyDiv.querySelectorAll('a')];
+    const cta = links.find((a) => !a.closest('h1, h2, h3, h4, h5, h6')) || links[0];
+    const href = cta?.getAttribute('href');
+    if (cta && !cta.closest('h1, h2, h3, h4, h5, h6')) (cta.closest('p') || cta).remove();
+
     // Colored panel on the right with the baked-in arrow, linking to the card.
     const colorDiv = document.createElement('div');
     colorDiv.className = 'cards-capabilities-card-color';
-    const href = bodyDiv.querySelector('a')?.getAttribute('href');
     const arrow = document.createElement(href ? 'a' : 'span');
     arrow.className = 'cards-capabilities-arrow';
     if (href) {
