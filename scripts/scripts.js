@@ -179,12 +179,32 @@ async function loadEager(doc) {
   }
 }
 
+// Experience Workspace (da.live canvas) renders the page inside an iframe so
+// authors can drop/edit blocks on a canvas. In that context the site
+// nav/footer is just chrome around the block being authored, so suppress it.
+// Gated on being framed by da.live so it never fires during normal top-level
+// preview/live viewing (which is never framed).
+const WORKSPACE_FRAME_HOSTS = /(^|\.)da\.live$/;
+
+function isWorkspaceFrame() {
+  // Not framed → normal preview/live view; leave the chrome alone.
+  if (window.self === window.top) return false;
+
+  // Chromium exposes the full ancestor chain; document.referrer is the
+  // cross-browser fallback (empty on some cross-origin frames).
+  const framedBy = window.location.ancestorOrigins?.[0] || document.referrer;
+  let host = '';
+  try { host = new URL(framedBy).hostname; } catch { /* opaque/no referrer */ }
+  return WORKSPACE_FRAME_HOSTS.test(host);
+}
+
 /**
  * Loads everything that doesn't need to be delayed.
  * @param {Element} doc The container element
  */
 async function loadLazy(doc) {
-  loadHeader(doc.querySelector('body > header'));
+  const workspace = isWorkspaceFrame();
+  if (!workspace) loadHeader(doc.querySelector('body > header'));
 
   const main = doc.querySelector('main');
   await loadSections(main);
@@ -193,7 +213,7 @@ async function loadLazy(doc) {
   const element = hash ? doc.getElementById(hash.substring(1)) : false;
   if (hash && element) element.scrollIntoView();
 
-  loadFooter(doc.querySelector('body > footer'));
+  if (!workspace) loadFooter(doc.querySelector('body > footer'));
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
   loadFonts();
