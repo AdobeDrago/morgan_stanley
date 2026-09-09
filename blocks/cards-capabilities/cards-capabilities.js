@@ -1,22 +1,30 @@
-import { decorateIcons } from '../../scripts/aem.js';
+import { decorateIcons, toClassName } from '../../scripts/aem.js';
 
 /*
  * cards-capabilities — colored capability tiles.
- * Authors provide one content cell per row (linked title + description). The
- * arrow icon is baked in (icons/cards-capabilities-arrow.svg), rendered inside
- * a colored panel on the right. Background color comes from a block option
- * class (e.g. `cards-capabilities (Dark Blue)` -> `.cards-capabilities.dark-blue`).
+ * Each authored row is two cells: the card content (linked title + description)
+ * and a background-color name (e.g. "Dark Blue"). The arrow icon is baked in
+ * (icons/cards-capabilities-arrow.svg) inside a colored panel on the right; the
+ * color name becomes a per-tile class (e.g. dark-blue) — see cards-capabilities.css
+ * and the DA config "cards-capabilities" options sheet for the supported set.
  */
 export default function decorate(block) {
   const ul = document.createElement('ul');
 
   [...block.children].forEach((row) => {
-    // Pick the content cell: the one that isn't a picture-only (legacy icon) cell.
     const cells = [...row.children];
-    const body = cells.find((cell) => !(cell.children.length === 1 && cell.querySelector('picture')))
-      || cells[cells.length - 1];
+
+    // Content cell = the one that isn't a plain short color-name label and isn't
+    // a legacy picture-only icon cell. Fall back to the first cell.
+    const isIcon = (c) => c.children.length === 1 && c.querySelector('picture');
+    const body = cells.find((c) => c.querySelector('h1, h2, h3, h4, h5, h6, p, a') && !isIcon(c))
+      || cells[0];
+    // Color cell = a remaining cell with just a short text label.
+    const colorCell = cells.find((c) => c !== body && !isIcon(c));
+    const colorName = colorCell ? toClassName(colorCell.textContent.trim()) : '';
 
     const li = document.createElement('li');
+    if (colorName) li.classList.add(colorName);
 
     const bodyDiv = document.createElement('div');
     bodyDiv.className = 'cards-capabilities-card-body';
