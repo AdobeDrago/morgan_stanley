@@ -90,33 +90,33 @@
   height: 100%;
 }
 
-/* ---- block-option background colors (from source .teaser b-* classes) ---- */
-.cards-capabilities.dark-blue > ul > li {
+/* ---- per-tile background colors (authored per row; from source .teaser b-* classes) ---- */
+.cards-capabilities > ul > li.dark-blue {
   --tile-bg: rgb(0 43 81);      /* b-dark-blue */
   --tile-fg: #fff;
 }
 
-.cards-capabilities.light-gray > ul > li {
+.cards-capabilities > ul > li.light-gray {
   --tile-bg: rgb(242 242 242);  /* b-x-light-gray */
   --tile-fg: var(--text-color);
 }
 
-.cards-capabilities.dark-slate > ul > li {
+.cards-capabilities > ul > li.dark-slate {
   --tile-bg: rgb(60 115 138);   /* b-dark-slate */
   --tile-fg: #fff;
 }
 
-.cards-capabilities.medium-blue > ul > li {
+.cards-capabilities > ul > li.medium-blue {
   --tile-bg: rgb(0 90 164);     /* b-medium-blue */
   --tile-fg: #fff;
 }
 
-.cards-capabilities.light-blue > ul > li {
+.cards-capabilities > ul > li.light-blue {
   --tile-bg: rgb(217 241 251);  /* b-light-blue-15 */
   --tile-fg: var(--text-color);
 }
 
-.cards-capabilities.violet > ul > li {
+.cards-capabilities > ul > li.violet {
   --tile-bg: rgb(103 44 180);   /* b-violet */
   --tile-fg: #fff;
 }
