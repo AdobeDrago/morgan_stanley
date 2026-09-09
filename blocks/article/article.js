@@ -45,27 +45,30 @@ function formatDate(iso) {
   return `${d} ${month} ${y}`;
 }
 
-// Author byline (text only — name link + role), resolved from /authors.json.
+// Author byline — one link per author wrapping the name (bold, underlined)
+// and, if present, the role (plain) on its own line. Resolved from /authors.json.
 async function renderByline(paths) {
   const byline = document.createElement('div');
   byline.className = 'article-byline';
   const rows = await fetchIndex('/authors.json');
   paths.forEach((path) => {
     const row = findRow(rows, path);
-    const author = document.createElement('div');
-    author.className = 'article-author';
     const link = document.createElement('a');
-    link.className = 'article-author-name';
+    link.className = 'article-author';
     link.href = path;
-    link.textContent = row && row.title ? row.title : humanize(path);
-    author.append(link);
+
+    const name = document.createElement('span');
+    name.className = 'article-author-name';
+    name.textContent = row && row.title ? row.title : humanize(path);
+    link.append(name);
+
     if (row && row.role) {
-      const role = document.createElement('p');
+      const role = document.createElement('span');
       role.className = 'article-author-role';
       role.textContent = row.role;
-      author.append(role);
+      link.append(role);
     }
-    byline.append(author);
+    byline.append(link);
   });
   return byline;
 }
