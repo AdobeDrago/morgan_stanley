@@ -1,9 +1,9 @@
 /* cards-capabilities — Morgan Stanley IM "Our Capabilities" colored tile grid.
-   Production ground-truth measured from
-   morganstanley.com/im/en-us/individual-investor.html at 1280px & 1900px.
    Decorated DOM: .cards-capabilities > ul > li
-     > .cards-capabilities-card-image (placeholder icon — hidden)
-     > .cards-capabilities-card-body (h3 + p[desc] + p>a[link -> arrow button]) */
+     > .cards-capabilities-card-body   (left: h3 + p description)
+     > .cards-capabilities-card-color   (right: colored panel + baked arrow)
+   Background color is set by a block-option class on .cards-capabilities
+   (dark-blue, light-gray, dark-slate, medium-blue, light-blue, violet). */
 
 .cards-capabilities > ul {
   list-style: none;
@@ -11,7 +11,7 @@
   padding: 0;
   display: grid;
   grid-template-columns: 1fr;   /* mobile-first: 1 column */
-  gap: 0;                        /* production tiles touch (measured horizGap 0) */
+  gap: 0;
 }
 
 /* medium: 2 columns */
@@ -21,103 +21,102 @@
   }
 }
 
-/* desktop: 3 columns (measured at 1900px; required at 1280 & 1900) */
-/* production is 2-column at ~1280 and 3-column at ~1440+; switch at 1366 so 1280
-   stays 2-col (the 600px rule above) and 1900 is 3-col */
+/* desktop: 3 columns */
 @media (width >= 1366px) {
   .cards-capabilities > ul {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
+/* each tile: content on the left, colored arrow panel on the right */
 .cards-capabilities > ul > li {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  min-height: 271px;             /* measured shortest tile */
-  padding: 32px 32px 92px;       /* 32px inset; bottom clears the 60px arrow */
-  background-color: var(--ms-navy);
-  color: #fff;
-}
-
-/* placeholder infographic icons in content are not used in production tiles */
-.cards-capabilities .cards-capabilities-card-image {
-  display: none;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  min-height: 271px;
+  background-color: var(--tile-bg, var(--ms-navy));
+  color: var(--tile-fg, #fff);
 }
 
 .cards-capabilities .cards-capabilities-card-body {
   margin: 0;
+  padding: 32px;
 }
 
 .cards-capabilities .cards-capabilities-card-body h3 {
-  margin: 24px 0 0;              /* padding-top(32)+margin(24)=56px top inset (measured) */
+  margin: 24px 0 0;
   font-size: 32px;
   font-weight: 500;
-  line-height: 1.1;              /* 35.2px measured */
+  line-height: 1.1;
   color: inherit;
+}
+
+.cards-capabilities .cards-capabilities-card-body h3 a {
+  color: inherit;
+  text-decoration: none;
 }
 
 .cards-capabilities .cards-capabilities-card-body p {
   margin: 24px 0 0;
   font-size: 20px;
-  line-height: 1.5;              /* 30px measured */
+  line-height: 1.5;
   color: inherit;
 }
 
-/* ---- per-tile background colors (measured, nth-child) ---- */
-.cards-capabilities > ul > li:nth-child(1) {            /* Equities */
-  background-color: var(--ms-navy);                     /* rgb(0,43,81) */
-  color: #fff;
+/* right colored panel — arrow anchored bottom-right */
+.cards-capabilities .cards-capabilities-card-color {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
 }
 
-.cards-capabilities > ul > li:nth-child(2) {            /* Fixed Income */
-  background-color: var(--ms-tile-gray);                /* rgb(242,242,242) */
-  color: var(--text-color);
-}
-
-.cards-capabilities > ul > li:nth-child(3) {            /* Liquidity */
-  background-color: #3c738a;                            /* rgb(60,115,138) dark-slate */
-  color: #fff;
-}
-
-.cards-capabilities > ul > li:nth-child(4) {            /* Alternative Investments */
-  background-color: var(--ms-primary-blue);             /* rgb(0,90,164) */
-  color: #fff;
-}
-
-.cards-capabilities > ul > li:nth-child(5) {            /* Solutions & Multi-Asset */
-  background-color: #d9f1fb;                            /* rgb(217,241,251) light-blue-15 */
-  color: var(--text-color);
-}
-
-.cards-capabilities > ul > li:nth-child(6) {            /* Digital Assets */
-  background-color: var(--ms-purple);                   /* brand purple per spec */
-  color: #fff;
-}
-
-/* ---- green square arrow button (bottom-right), from the p>a link ---- */
-.cards-capabilities .cards-capabilities-card-body p:last-child {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  margin: 0;
-}
-
-.cards-capabilities .cards-capabilities-card-body p:last-child a {
+.cards-capabilities .cards-capabilities-arrow {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 60px;
   height: 60px;
-  background-color: var(--ms-teal);   /* #00857d per spec */
-  font-size: 0;                       /* hide the link's text label */
+  background-color: var(--ms-teal);
   text-decoration: none;
-  border: 0;
 }
 
-.cards-capabilities .cards-capabilities-card-body p:last-child a::after {
-  content: "\2192";                   /* → */
-  font-size: 24px;
-  line-height: 1;
-  color: #fff;
+.cards-capabilities .cards-capabilities-arrow .icon {
+  width: 34px;
+  height: 23px;
+}
+
+.cards-capabilities .cards-capabilities-arrow .icon img,
+.cards-capabilities .cards-capabilities-arrow .icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ---- block-option background colors (from source .teaser b-* classes) ---- */
+.cards-capabilities.dark-blue > ul > li {
+  --tile-bg: rgb(0 43 81);      /* b-dark-blue */
+  --tile-fg: #fff;
+}
+
+.cards-capabilities.light-gray > ul > li {
+  --tile-bg: rgb(242 242 242);  /* b-x-light-gray */
+  --tile-fg: var(--text-color);
+}
+
+.cards-capabilities.dark-slate > ul > li {
+  --tile-bg: rgb(60 115 138);   /* b-dark-slate */
+  --tile-fg: #fff;
+}
+
+.cards-capabilities.medium-blue > ul > li {
+  --tile-bg: rgb(0 90 164);     /* b-medium-blue */
+  --tile-fg: #fff;
+}
+
+.cards-capabilities.light-blue > ul > li {
+  --tile-bg: rgb(217 241 251);  /* b-light-blue-15 */
+  --tile-fg: var(--text-color);
+}
+
+.cards-capabilities.violet > ul > li {
+  --tile-bg: rgb(103 44 180);   /* b-violet */
+  --tile-fg: #fff;
 }
