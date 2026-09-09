@@ -79,10 +79,12 @@ function buildCard(path, row) {
 
 export default function decorate(block) {
   // Collect authored insight paths (one per row; tolerate a link or plain text).
+  // Render at most two cards — any beyond the second are ignored.
+  const MAX_CARDS = 2;
   const paths = [...block.children].map((row) => {
     const a = row.querySelector('a');
     return (a ? a.getAttribute('href') : row.textContent).trim();
-  }).filter(Boolean);
+  }).filter(Boolean).slice(0, MAX_CARDS);
 
   const ul = document.createElement('ul');
   block.textContent = '';
