@@ -51,7 +51,7 @@
 
 .article-eyebrow {
   margin: 0 0 1rem;
-  font-size: var(--body-font-size-s);
+  font-size: var(--body-font-size-m);
   font-weight: 400;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -67,7 +67,7 @@
 
 .article-date {
   margin: 0;
-  font-size: var(--body-font-size-s);
+  font-size: var(--body-font-size-m);
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: #fff;
@@ -83,33 +83,39 @@
 
 .article-authors-heading {
   margin: 0 0 1.5rem;
-  font-size: var(--heading-font-size-s);
+  font-size: var(--heading-font-size-l);
   font-weight: 400;
+  line-height: 1.1;
   color: #fff;
 }
 
 .article-byline {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
-a.article-author-name:any-link {
-  display: inline-block;
+/* Whole author entry is one link: name (bold, underlined) + role (plain). */
+a.article-author:any-link,
+a.article-author:hover {
+  display: block;
   color: #fff;
+  text-decoration: none;
+}
+
+.article-author-name {
+  display: block;
+  font-size: var(--body-font-size-m);
   font-weight: 700;
   text-decoration: underline;
 }
 
-a.article-author-name:hover {
-  color: #fff;
-  text-decoration: underline;
-}
-
 .article-author-role {
-  margin: 0.25rem 0 0;
-  color: #fff;
+  display: block;
+  margin-top: 0.25rem;
+  font-size: var(--body-font-size-m);
   font-weight: 400;
+  text-decoration: none;
 }
 
 /* ---- Desktop hero: three columns in one row ---------------- */
@@ -124,7 +130,7 @@ a.article-author-name:hover {
   .article-hero-authors {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-end;
     padding: 3rem 3.5rem;
   }
 
@@ -134,6 +140,10 @@ a.article-author-name:hover {
 
   .article-hero-text h1 {
     font-size: var(--heading-font-size-xxl);
+  }
+
+  .article-authors-heading {
+    font-size: var(--heading-font-size-xl);
   }
 }
 
