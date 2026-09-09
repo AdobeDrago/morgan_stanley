@@ -2,8 +2,9 @@
    Article block
    ============================================================ */
 
-/* Body copy stays in a comfortable reading column. */
-.article > div:not(.article-masthead) {
+/* Body copy stays in a comfortable reading column
+   (hero and featured-insights break out to their own widths). */
+.article > div:not(.article-masthead, .article-featured) {
   max-width: 48rem;
   margin-left: auto;
   margin-right: auto;
@@ -137,66 +138,114 @@ a.article-author-name:hover {
 }
 
 /* ============================================================
-   Related Insights
+   Featured Insights
    ============================================================ */
-.article-related {
-  max-width: 48rem;
+.article-featured {
+  max-width: 1200px;
   margin: 3rem auto 0;
-  padding-top: 2rem;
-  border-top: 1px solid var(--light-color, #eee);
+  padding: 0 24px;
 }
 
-.article-related h2 {
-  margin-top: 0;
+.article-featured h2 {
+  margin: 0 0 1.5rem;
+  font-size: var(--heading-font-size-xl);
+  font-weight: 700;
 }
 
-.article-related .cards {
+.article-featured-cards {
   list-style: none;
   padding: 0;
   margin: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: 1fr;
   gap: 1.5rem;
 }
 
-.article-related .cards li {
-  border: 1px solid var(--light-color, #eee);
-  border-radius: 4px;
+.article-featured-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid #e6e6e6;
+  text-decoration: none;
+  color: var(--text-color);
+}
+
+.article-featured-image img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.article-featured-body {
+  flex: 1 1 auto;
+  padding: 1.25rem 1.5rem 0.5rem;
+}
+
+.article-featured-series {
+  margin: 0 0 0.75rem;
+  font-size: var(--body-font-size-xs);
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--dark-color, #505050);
+}
+
+.article-featured-title {
+  margin: 0 0 0.75rem;
+  font-size: var(--heading-font-size-s);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--text-color);
+}
+
+.article-featured-desc {
+  margin: 0;
+  font-size: var(--body-font-size-s);
+  line-height: 1.5;
+  color: var(--text-color);
+
+  /* clamp to keep card heights aligned */
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.article-related .cards a {
-  text-decoration: none;
-  color: inherit;
-  display: block;
+.article-featured-footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 1rem 0 0 1.5rem;
 }
 
-.article-related .cards-card-image img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-.article-related .cards-card-body {
-  padding: 1rem;
-}
-
-.article-related-series {
-  margin: 0 0 0.25rem;
-  font-size: var(--body-font-size-xs, 0.75rem);
-  font-weight: 700;
-  letter-spacing: 0.08em;
+.article-featured-date {
+  margin: 0 0 1rem;
+  font-size: var(--body-font-size-xs);
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--link-color);
-}
-
-.article-related-title {
-  margin: 0 0 0.5rem;
-  font-weight: 700;
-}
-
-.article-related-date {
-  margin: 0;
-  font-size: var(--body-font-size-xs, 0.75rem);
   color: var(--dark-color, #505050);
+}
+
+.article-featured-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  flex: none;
+  background-color: var(--ms-teal);
+  color: #fff;
+}
+
+.article-featured-icon img,
+.article-featured-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+@media (width >= 700px) {
+  .article-featured-cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
