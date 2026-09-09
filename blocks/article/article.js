@@ -154,11 +154,17 @@ export default function decorate(block) {
   const masthead = document.createElement('div');
   masthead.className = 'article-masthead';
 
-  // Media panel (eager hero for LCP).
+  // Media panel (eager hero for LCP). Request the DAM "Small" smart-crop
+  // rendition. A plain <img> is used instead of createOptimizedPicture because
+  // the latter rebuilds the URL from origin+pathname and drops the query string.
   if (image) {
     const media = document.createElement('div');
     media.className = 'article-hero-media';
-    media.append(createOptimizedPicture(image, title, true));
+    const img = document.createElement('img');
+    img.src = `${image}${image.includes('?') ? '&' : '?'}smartcrop=Small`;
+    img.alt = title;
+    img.loading = 'eager';
+    media.append(img);
     masthead.append(media);
   }
 
