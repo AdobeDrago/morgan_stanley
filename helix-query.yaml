@@ -80,3 +80,5 @@ indices:
         select: none
         value: |
           parseTimestamp(headers['last-modified'], 'ddd, DD MMM YYYY hh:mm:ss GMT')
+
+# index config for morgan-stanley (insights + authors)
