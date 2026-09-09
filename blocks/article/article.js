@@ -1,4 +1,4 @@
-import { createOptimizedPicture, getMetadata } from '../../scripts/aem.js';
+import { createOptimizedPicture, decorateIcons, getMetadata } from '../../scripts/aem.js';
 
 // Memoized index fetches — one network request per index, shared across blocks.
 const indexCache = new Map();
@@ -70,45 +70,65 @@ async function renderByline(paths) {
   return byline;
 }
 
-async function renderRelated(paths) {
+async function renderFeatured(paths) {
   const rows = await fetchIndex('/insights.json');
   const section = document.createElement('div');
-  section.className = 'article-related';
+  section.className = 'article-featured';
   const heading = document.createElement('h2');
-  heading.textContent = 'Related Insights';
+  heading.textContent = 'Featured Insights';
   section.append(heading);
   const ul = document.createElement('ul');
-  ul.className = 'cards'; // reuse cards block styling
+  ul.className = 'article-featured-cards';
   paths.forEach((path) => {
     const row = findRow(rows, path);
     const li = document.createElement('li');
     const link = document.createElement('a');
+    link.className = 'article-featured-card';
     link.href = path;
+
+    // image
     if (row && row.image) {
       const imgDiv = document.createElement('div');
-      imgDiv.className = 'cards-card-image';
+      imgDiv.className = 'article-featured-image';
       imgDiv.append(createOptimizedPicture(row.image, row.title || '', false, [{ width: '750' }]));
       link.append(imgDiv);
     }
+
+    // body: series, title, description
     const body = document.createElement('div');
-    body.className = 'cards-card-body';
+    body.className = 'article-featured-body';
     if (row && row.series) {
       const series = document.createElement('p');
-      series.className = 'article-related-series';
+      series.className = 'article-featured-series';
       series.textContent = row.series;
       body.append(series);
     }
     const title = document.createElement('p');
-    title.className = 'article-related-title';
+    title.className = 'article-featured-title';
     title.textContent = row && row.title ? row.title : humanize(path);
     body.append(title);
-    if (row && row['publication-date']) {
-      const date = document.createElement('p');
-      date.className = 'article-related-date';
-      date.textContent = formatDate(row['publication-date']);
-      body.append(date);
+    if (row && row.description) {
+      const desc = document.createElement('p');
+      desc.className = 'article-featured-desc';
+      desc.textContent = row.description;
+      body.append(desc);
     }
     link.append(body);
+
+    // footer: date + article icon
+    const footer = document.createElement('div');
+    footer.className = 'article-featured-footer';
+    if (row && row['publication-date']) {
+      const date = document.createElement('p');
+      date.className = 'article-featured-date';
+      date.textContent = formatDate(row['publication-date']);
+      footer.append(date);
+    }
+    const icon = document.createElement('span');
+    icon.className = 'icon icon-article article-featured-icon';
+    footer.append(icon);
+    link.append(footer);
+
     li.append(link);
     ul.append(li);
   });
@@ -173,8 +193,11 @@ export default function decorate(block) {
 
   block.prepend(masthead);
 
-  // Related Insights — appended once the insights index resolves.
+  // Featured Insights — appended once the insights index resolves.
   if (related.length) {
-    renderRelated(related).then((section) => block.append(section));
+    renderFeatured(related).then((section) => {
+      block.append(section);
+      decorateIcons(section);
+    });
   }
 }
