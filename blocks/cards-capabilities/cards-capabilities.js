@@ -2,44 +2,25 @@ import { decorateIcons, toClassName } from '../../scripts/aem.js';
 
 /*
  * cards-capabilities — colored capability tiles.
- * Each authored row is two cells: the card content (linked title + description)
- * and a background-color name (e.g. "Dark Blue"). The arrow icon is baked in
- * (icons/cards-capabilities-arrow.svg) inside a colored panel on the right; the
- * color name becomes a per-tile class (e.g. dark-blue) — see cards-capabilities.css
- * and the DA config "cards-capabilities" options sheet for the supported set.
+ * Authored as key/value rows (so DA block-options autocomplete works):
+ *   | content | <h3>title</h3><p>desc</p><p><a>link</a></p> |
+ *   | color   | Dark Blue                                   |
+ * A `content` row starts a new card; subsequent keys (`color`) apply to it.
+ * The arrow icon is baked in (icons/cards-capabilities-arrow.svg) inside a
+ * colored panel on the right; the color name becomes a per-card class
+ * (see cards-capabilities.css and the DA config `options` sheet).
  */
 export default function decorate(block) {
   const ul = document.createElement('ul');
+  let li = null;
 
-  [...block.children].forEach((row) => {
-    const cells = [...row.children];
-
-    // Content cell = the one that isn't a plain short color-name label and isn't
-    // a legacy picture-only icon cell. Fall back to the first cell.
-    const isIcon = (c) => c.children.length === 1 && c.querySelector('picture');
-    const body = cells.find((c) => c.querySelector('h1, h2, h3, h4, h5, h6, p, a') && !isIcon(c))
-      || cells[0];
-    // Color cell = a remaining cell with just a short text label.
-    const colorCell = cells.find((c) => c !== body && !isIcon(c));
-    const colorName = colorCell ? toClassName(colorCell.textContent.trim()) : '';
-
-    const li = document.createElement('li');
-    if (colorName) li.classList.add(colorName);
-
-    const bodyDiv = document.createElement('div');
-    bodyDiv.className = 'cards-capabilities-card-body';
-    while (body && body.firstChild) bodyDiv.append(body.firstChild);
-    li.append(bodyDiv);
-
-    // The card's link becomes the arrow's target. Prefer a standalone CTA link
-    // (not the one inside the heading); remove its now-redundant paragraph so it
-    // doesn't render as duplicate body text. Keep a heading link in place.
+  const finishArrow = (bodyDiv, listItem) => {
+    // The card's link becomes the arrow target; drop its redundant paragraph.
     const links = [...bodyDiv.querySelectorAll('a')];
     const cta = links.find((a) => !a.closest('h1, h2, h3, h4, h5, h6')) || links[0];
     const href = cta?.getAttribute('href');
     if (cta && !cta.closest('h1, h2, h3, h4, h5, h6')) (cta.closest('p') || cta).remove();
 
-    // Colored panel on the right with the baked-in arrow, linking to the card.
     const colorDiv = document.createElement('div');
     colorDiv.className = 'cards-capabilities-card-color';
     const arrow = document.createElement(href ? 'a' : 'span');
@@ -53,10 +34,32 @@ export default function decorate(block) {
     icon.className = 'icon icon-cards-capabilities-arrow';
     arrow.append(icon);
     colorDiv.append(arrow);
-    li.append(colorDiv);
+    listItem.append(colorDiv);
+  };
 
-    ul.append(li);
+  [...block.children].forEach((row) => {
+    const cells = [...row.children];
+    const key = toClassName(cells[0]?.textContent.trim() || '');
+    const valueCell = cells[1];
+
+    if (key === 'content' || (!li && key !== 'color')) {
+      // Start a new card. (The `!li` fallback tolerates a missing key on the
+      // first content row.)
+      if (li) { finishArrow(li.querySelector('.cards-capabilities-card-body'), li); ul.append(li); }
+      li = document.createElement('li');
+      const bodyDiv = document.createElement('div');
+      bodyDiv.className = 'cards-capabilities-card-body';
+      const source = valueCell || cells[0];
+      while (source && source.firstChild) bodyDiv.append(source.firstChild);
+      li.append(bodyDiv);
+    } else if (key === 'color' && li) {
+      const name = toClassName((valueCell || cells[cells.length - 1])?.textContent.trim() || '');
+      if (name) li.classList.add(name);
+    }
   });
+
+  // Flush the final card.
+  if (li) { finishArrow(li.querySelector('.cards-capabilities-card-body'), li); ul.append(li); }
 
   block.textContent = '';
   block.append(ul);
