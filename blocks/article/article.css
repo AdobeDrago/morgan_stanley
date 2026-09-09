@@ -121,7 +121,7 @@ a.article-author:hover {
 /* ---- Desktop hero: three columns in one row ---------------- */
 @media (width >= 900px) {
   .article-masthead {
-    grid-template-columns: 55fr 20fr 25fr;
+    grid-template-columns: 52fr 23fr 25fr;
     grid-template-areas: 'text authors media';
     min-height: 620px;
   }
@@ -132,6 +132,10 @@ a.article-author:hover {
     flex-direction: column;
     justify-content: flex-end;
     padding: 3rem 3.5rem;
+  }
+
+  .article-hero-authors {
+    padding-right: 1.5rem;
   }
 
   .article-hero-text {
