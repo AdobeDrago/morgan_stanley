@@ -240,8 +240,8 @@ a.article-author-name:hover {
 
 .article-featured-icon img,
 .article-featured-icon svg {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: auto;
 }
 
 @media (width >= 700px) {
